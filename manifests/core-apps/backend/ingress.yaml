@@ -11,6 +11,8 @@ metadata:
 
     alb.ingress.kubernetes.io/group.name: shared-alb  
 
+    alb.ingress.kubernetes.io/group.order: "1"
+
 spec:
   ingressClassName: alb
 
