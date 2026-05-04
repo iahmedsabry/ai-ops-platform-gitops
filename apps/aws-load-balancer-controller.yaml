@@ -17,7 +17,7 @@ spec:
           create: true
           name: aws-load-balancer-controller
           annotations:
-            eks.amazonaws.com/role-arn: arn:aws:iam::249634238928:oidc-provider/oidc.eks.us-east-1.amazonaws.com/id/4A0E483E93FDAA237B90CB993B7F86F0
+            eks.amazonaws.com/role-arn: arn:aws:iam::249634238928:role/AmazonEKSLoadBalancerControllerRole
 
   destination:
     server: https://kubernetes.default.svc
