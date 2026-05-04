@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: backend
+
+spec:
+  replicas: 1   # Single instance (PoC)
+
+  selector:
+    matchLabels:
+      app: backend
+
+  template:
+    metadata:
+      labels:
+        app: backend
+
+    spec:
+      containers:
+        - name: backend
+          image: hashicorp/http-echo:0.2.3   # Simple test server
+
+          args:
+            - "-text=Hello from backend"
+
+          ports:
+            - containerPort: 5678
+
+          env:
+            - name: DB_HOST
+              value: postgresql.database.svc.cluster.local
+
+            - name: DB_USER
+              value: admin
+
+            - name: DB_PASSWORD
+              value: admin123
