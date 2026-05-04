@@ -11,7 +11,7 @@ spec:
     chart: aws-load-balancer-controller
     targetRevision: 1.6.2
     helm:
-      valuesObject: |
+      valuesObject:
         clusterName: ai-ops-platform-eks
         region: us-east-1
         vpcId: vpc-0cd324380a37c26b6
