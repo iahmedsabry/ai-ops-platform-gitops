@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: postgresql              # Name in Argo CD
+  namespace: argocd
+
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/iahmedsabry/ai-ops-platform-gitops.git
+    targetRevision: HEAD
+    path: manifests/core-apps/postgresql   # Where DB manifests will live
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: database        # Separate namespace for DB
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+
+    syncOptions:
+      - CreateNamespace=true   # Auto-create namespace
