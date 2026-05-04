@@ -15,8 +15,8 @@ spec:
         clusterName: ai-ops-platform-eks
         region: us-east-1
 
-        extraArgs:
-          aws-vpc-id: vpc-0cd324380a37c26b6
+        vpc:
+          Id: vpc-0cd324380a37c26b6
           
         serviceAccount:
           create: true
