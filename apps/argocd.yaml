@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-app  # Name of this Argo CD app
+  namespace: argocd  # Argo CD runs here
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/<YOUR_GIT_REPO>.git  # <-- change this
+    targetRevision: HEAD
+    path: manifests/argocd  # <-- this is your ingress folder
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd  # where resources will be created
+
+  syncPolicy:
+    automated:
+      prune: true       # remove old resources
+      selfHeal: true    # fix drift automatically
