@@ -7,9 +7,9 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/<YOUR_GIT_REPO>.git  # <-- change this
+    repoURL: https://github.com/iahmedsabry/ai-ops-platform-gitops.git
     targetRevision: HEAD
-    path: manifests/argocd  # <-- this is your ingress folder
+    path: manifests/argocd
 
   destination:
     server: https://kubernetes.default.svc
