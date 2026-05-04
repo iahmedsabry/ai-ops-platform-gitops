@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus                 # Name in Argo CD
+  namespace: argocd               # Argo CD namespace
+
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/iahmedsabry/ai-ops-platform-gitops.git
+    targetRevision: HEAD
+    path: manifests/core-apps/prometheus   # Where manifests will live
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring         # Prometheus will be deployed here
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+
+    syncOptions:
+      - CreateNamespace=true      # Auto-create namespace

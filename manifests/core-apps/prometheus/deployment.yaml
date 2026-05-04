@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+  labels:
+    app: prometheus
+spec:
+  replicas: 1   # Only 1 pod (simple PoC)
+  selector:
+    matchLabels:
+      app: prometheus
+
+  template:
+    metadata:
+      labels:
+        app: prometheus
+
+    spec:
+      containers:
+        - name: prometheus
+          image: prom/prometheus:latest   # Official Prometheus image
+          
+          ports:
+            - containerPort: 9090         # Prometheus UI port
+
+          args:
+            - "--config.file=/etc/prometheus/prometheus.yml"
+
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/prometheus   # Where config will live
+
+      volumes:
+        - name: config-volume
+          configMap:
+            name: prometheus-config       # We will create this next
