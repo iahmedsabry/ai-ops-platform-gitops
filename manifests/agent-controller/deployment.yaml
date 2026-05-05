@@ -16,5 +16,6 @@ spec:
       containers:
         - name: agent-controller
           image: iahmedsabry/agent-controller:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8000
