@@ -19,3 +19,10 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
+
+          env:
+            - name: LLM_API_URL
+              value: "https://labs.pluralsight.com/labs-ai-proxy/"
+
+            - name: LLM_API_KEY
+              value: "6753961d-9bf0-4fd2-ac06-f6604833c5af"
