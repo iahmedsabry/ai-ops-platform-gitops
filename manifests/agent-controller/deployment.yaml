@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agent-controller
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: agent-controller
+  template:
+    metadata:
+      labels:
+        app: agent-controller
+    spec:
+      containers:
+        - name: agent-controller
+          image: iahmedsabry/agent-controller:latest
+          ports:
+            - containerPort: 8000
