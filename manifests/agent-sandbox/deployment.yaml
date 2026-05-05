@@ -13,6 +13,7 @@ spec:
       labels:
         app: agent-sandbox
     spec:
+      serviceAccountName: agent-sandbox
       containers:
         - name: agent-sandbox
           image: iahmedsabry/agent-sandbox:latest
