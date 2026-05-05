@@ -22,7 +22,7 @@ spec:
 
           env:
             - name: LLM_API_URL
-              value: "https://labs.pluralsight.com/labs-ai-proxy/"
+              value: "https://labs.pluralsight.com/labs-ai-proxy/v1/chat/completions"
 
             - name: LLM_API_KEY
               value: "6753961d-9bf0-4fd2-ac06-f6604833c5af"
