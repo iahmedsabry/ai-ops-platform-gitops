@@ -14,13 +14,13 @@ spec:
       values: |
         clusterName: ai-ops-platform-eks
         region: us-east-1
-        vpcId: vpc-0cd324380a37c26b6
+        vpcId: vpc-07fadafe057e42895
           
         serviceAccount:
           create: true
           name: aws-load-balancer-controller
           annotations:
-            eks.amazonaws.com/role-arn: arn:aws:iam::249634238928:role/AmazonEKSLoadBalancerControllerRole
+            eks.amazonaws.com/role-arn: arn:aws:iam::975050030597:role/AmazonEKSLoadBalancerControllerRole
 
   destination:
     server: https://kubernetes.default.svc
