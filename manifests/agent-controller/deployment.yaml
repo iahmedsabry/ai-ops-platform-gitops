@@ -21,8 +21,5 @@ spec:
             - containerPort: 8000
 
           env:
-            - name: LLM_API_URL
-              value: "https://labs.pluralsight.com/labs-ai-proxy/rest/bedrock/anthropic/claude-45-opus"
-
-            - name: LLM_API_KEY
-              value: "6753961d-9bf0-4fd2-ac06-f6604833c5af"
+            - name: GEMINI_API_KEY
+              value: "AIzaSyD-ZrsfpTk0x2YtdwG9bc3g8Ec2SI0lEq8"
