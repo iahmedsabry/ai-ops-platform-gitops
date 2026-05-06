@@ -22,4 +22,4 @@ spec:
 
           env:
             - name: GEMINI_API_KEY
-              value: "AIzaSyD-ZrsfpTk0x2YtdwG9bc3g8Ec2SI0lEq8"
+              value: "AIzaSyCoLtXQ7wbwNXjT30ZPFMZvB8qnH_kE0KU"
