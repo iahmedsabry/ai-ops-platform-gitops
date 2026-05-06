@@ -10,7 +10,7 @@ metadata:
     alb.ingress.kubernetes.io/target-type: ip
 
     alb.ingress.kubernetes.io/group.name: shared-alb
-    alb.ingress.kubernetes.io/group.order: "1"
+    alb.ingress.kubernetes.io/group.order: "2"
 
 spec:
   ingressClassName: alb
@@ -18,7 +18,7 @@ spec:
   rules:
     - http:
         paths:
-          - path: /ui
+          - path: /aiops
             pathType: Prefix
             backend:
               service:
