@@ -3,53 +3,131 @@ kind: ServiceAccount
 metadata:
   name: agent-sandbox
   namespace: default
+
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: agent-sandbox-role
+
 rules:
+
+  # =====================================================
   # Pods + logs
+  # =====================================================
   - apiGroups: [""]
     resources:
       - pods
       - pods/log
       - pods/status
-    verbs: ["get", "list"]
+    verbs:
+      - get
+      - list
 
+  # =====================================================
   # Events
+  # =====================================================
   - apiGroups: [""]
     resources:
       - events
-    verbs: ["get", "list"]
+    verbs:
+      - get
+      - list
 
+  # =====================================================
   # Services
+  # =====================================================
   - apiGroups: [""]
     resources:
       - services
-    verbs: ["get", "list"]
+    verbs:
+      - get
+      - list
 
-  # Deployments
+  # =====================================================
+  # Namespaces
+  # =====================================================
+  - apiGroups: [""]
+    resources:
+      - namespaces
+    verbs:
+      - get
+      - list
+
+  # =====================================================
+  # Nodes
+  # =====================================================
+  - apiGroups: [""]
+    resources:
+      - nodes
+    verbs:
+      - get
+      - list
+
+  # =====================================================
+  # PVCs
+  # =====================================================
+  - apiGroups: [""]
+    resources:
+      - persistentvolumeclaims
+    verbs:
+      - get
+      - list
+
+  # =====================================================
+  # Deployments / ReplicaSets / StatefulSets / DaemonSets
+  # =====================================================
   - apiGroups: ["apps"]
     resources:
       - deployments
       - replicasets
-    verbs: ["get", "list"]
+      - statefulsets
+      - daemonsets
+    verbs:
+      - get
+      - list
 
-  # Ingress
+  # =====================================================
+  # Ingresses
+  # =====================================================
   - apiGroups: ["networking.k8s.io"]
     resources:
       - ingresses
-    verbs: ["get", "list"]
+    verbs:
+      - get
+      - list
+
+  # =====================================================
+  # Horizontal Pod Autoscalers (HPA)
+  # =====================================================
+  - apiGroups: ["autoscaling"]
+    resources:
+      - horizontalpodautoscalers
+    verbs:
+      - get
+      - list
+
+  # =====================================================
+  # Argo CD Applications CRD
+  # =====================================================
+  - apiGroups: ["argoproj.io"]
+    resources:
+      - applications
+    verbs:
+      - get
+      - list
+
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: agent-sandbox-binding
+
 subjects:
   - kind: ServiceAccount
     name: agent-sandbox
     namespace: default
+
 roleRef:
   kind: ClusterRole
   name: agent-sandbox-role
