@@ -1,21 +1,29 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
-
 metadata:
   name: aws-load-balancer-controller
   namespace: argocd
-
 spec:
   project: default
 
   source:
-    repoURL: https://github.com/iahmedsabry/ai-ops-platform-gitops.git
-    targetRevision: HEAD
-    path: manifests/aws-load-balancer-controller
+    repoURL: https://aws.github.io/eks-charts
+    chart: aws-load-balancer-controller
+    targetRevision: 1.6.2
+    helm:
+      values: |
+        clusterName: ai-ops-platform-eks
+        region: us-east-1
+        vpcId: vpc-0ca121ac0245bb135
+        serviceAccount:
+          create: true
+          name: aws-load-balancer-controller
+          annotations:
+            eks.amazonaws.com/role-arn: arn:aws:iam::546578040497:role/AmazonEKSLoadBalancerControllerRole
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: argocd
+    namespace: kube-system
 
   syncPolicy:
     automated:
