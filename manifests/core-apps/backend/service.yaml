@@ -7,7 +7,7 @@ spec:
   type: ClusterIP
 
   selector:
-    app: backend
+    app: wrong-backend
 
   ports:
     - port: 80
