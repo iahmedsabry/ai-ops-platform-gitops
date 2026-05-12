@@ -8,16 +8,24 @@ data:
   default.conf: |
     server {
       listen 80;
-
       server_name _;
 
       root /usr/share/nginx/html;
       index index.html;
 
-      # Handle /aiops requests
-      location /aiops {
+      # K8s Ops Chat SPA (ingress path prefix /k8s-ops-chat)
+      location = /k8s-ops-chat {
+        root /usr/share/nginx/html;
+        try_files /index.html =404;
+      }
 
-        # Return index.html for the UI
-        try_files $uri $uri/ /index.html;
+      location = /k8s-ops-chat/ {
+        root /usr/share/nginx/html;
+        try_files /index.html =404;
+      }
+
+      location ^~ /k8s-ops-chat/ {
+        root /usr/share/nginx/html;
+        rewrite ^/k8s-ops-chat/.*$ /index.html break;
       }
     }

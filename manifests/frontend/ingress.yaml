@@ -18,7 +18,8 @@ spec:
   rules:
     - http:
         paths:
-          - path: /aiops
+          # K8s Ops Chat UI (static HTML in frontend pod)
+          - path: /k8s-ops-chat
             pathType: Prefix
             backend:
               service:
@@ -26,6 +27,7 @@ spec:
                 port:
                   number: 80
 
+          # Agent API — keep this path exclusive to agent-controller
           - path: /chat
             pathType: Prefix
             backend:
