@@ -452,44 +452,45 @@ data:
             overflow: visible;
           }
 
-          /* Aurora glow behind the message field (children stay still) */
+          /* Pill + animated gradient border (rotating conic ring — colors move along edge) */
           .input-aurora {
             position: relative;
             z-index: 0;
-            border-radius: 16px;
+            width: 100%;
+            padding: 2px;
             margin: 6px 2px 10px;
+            border-radius: 9999px;
+            overflow: hidden;
+            isolation: isolate;
           }
 
           .input-aurora::before {
             content: "";
             position: absolute;
-            inset: -5px;
+            inset: 0;
             z-index: 0;
-            border-radius: 22px;
+            border-radius: inherit;
             pointer-events: none;
             transform-origin: 50% 50%;
             background: conic-gradient(
               from 0deg,
-              rgba(99, 140, 248, 0.55),
-              rgba(56, 189, 248, 0.42),
-              rgba(45, 212, 191, 0.48),
-              rgba(167, 139, 250, 0.52),
-              rgba(129, 140, 255, 0.45),
-              rgba(34, 211, 238, 0.4),
-              rgba(99, 140, 248, 0.55)
+              #2563eb,
+              #9333ea,
+              #22d3ee,
+              #4f46e5,
+              #14b8a6,
+              #7c3aed,
+              #2563eb
             );
-            filter: blur(16px);
-            opacity: 0.48;
-            animation: aurora-spin 18s linear infinite;
-            will-change: transform;
+            animation: aurora-border-spin 14s linear infinite;
           }
 
           .input-aurora:has(.input-shell:focus-within)::before {
-            opacity: 0.62;
-            filter: blur(18px);
+            animation-duration: 10s;
+            filter: brightness(1.08);
           }
 
-          @keyframes aurora-spin {
+          @keyframes aurora-border-spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
           }
@@ -497,7 +498,14 @@ data:
           @media (prefers-reduced-motion: reduce) {
             .input-aurora::before {
               animation: none;
-              opacity: 0.22;
+              background: linear-gradient(
+                135deg,
+                #2563eb 0%,
+                #9333ea 35%,
+                #22d3ee 55%,
+                #4f46e5 75%,
+                #7c3aed 100%
+              );
             }
           }
 
@@ -512,24 +520,22 @@ data:
               var(--bg-input-top) 0%,
               var(--bg-input-bottom) 100%
             );
-            border: 1px solid var(--input-border);
-            border-radius: 16px;
-            padding: 8px 10px 8px 18px;
+            border: none;
+            border-radius: 9999px;
+            padding: 8px 8px 8px 20px;
             min-height: 52px;
             box-shadow:
               inset 0 1px 0 rgba(255,255,255,.07),
               0 4px 20px rgba(0,0,0,.28),
               0 1px 0 rgba(0,0,0,.2);
             transition:
-              border-color 0.2s ease,
               box-shadow 0.2s ease;
           }
 
           .input-shell:focus-within {
-            border-color: rgba(130, 165, 245, 0.42);
             box-shadow:
-              inset 0 1px 0 rgba(255,255,255,.08),
-              0 0 0 3px var(--input-ring),
+              inset 0 1px 0 rgba(255,255,255,.1),
+              0 0 0 2px rgba(99, 102, 241, 0.35),
               0 8px 28px rgba(0,0,0,.32);
           }
 
@@ -540,7 +546,7 @@ data:
             resize: none;
             min-height: 44px;
             max-height: 200px;
-            padding: 11px 8px 11px 0;
+            padding: 11px 10px 11px 0;
             font-family: var(--font-ui);
             font-size: 0.9375rem;
             font-weight: 400;
@@ -556,7 +562,6 @@ data:
             opacity: 0.92;
           }
 
-          /* Send = white chevron, no filled pill */
           #sendBtn {
             flex-shrink: 0;
             width: 40px;
@@ -564,17 +569,17 @@ data:
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            border-radius: 8px;
+            border-radius: 50%;
             border: none;
-            background: transparent;
-            color: #fff;
-            opacity: 0.92;
-            transition: opacity .15s ease, transform .08s ease;
+            background: rgba(255,255,255,.08);
+            color: #f0f4ff;
+            opacity: 0.95;
+            transition: opacity .15s ease, transform .08s ease, background .15s ease;
           }
 
           #sendBtn:hover:not(:disabled) {
             opacity: 1;
-            background: rgba(255,255,255,.06);
+            background: rgba(255,255,255,.12);
           }
 
           #sendBtn:active:not(:disabled) {
@@ -713,8 +718,8 @@ data:
                 <div class="input-shell">
                   <textarea id="message" rows="1" placeholder="Message the cluster agent…" autocomplete="off"></textarea>
                   <button type="button" id="sendBtn" title="Send" aria-label="Send message">
-                    <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none">
+                      <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                   </button>
                 </div>
