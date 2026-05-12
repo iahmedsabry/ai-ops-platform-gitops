@@ -837,9 +837,9 @@ data:
                 <div class="input-shell">
                   <textarea id="message" rows="1" placeholder="Message the cluster agent…" autocomplete="off"></textarea>
                   <button type="button" id="sendBtn" title="Send" aria-label="Send message">
-                    <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true" fill="none">
-                      <line x1="12" y1="20.2" x2="12" y2="10.35" stroke="currentColor" stroke-width="1.28" stroke-linecap="round"/>
-                      <path d="M8.35 10.5L12 3.85L15.65 10.5" stroke="currentColor" stroke-width="1.28" stroke-linecap="round" stroke-linejoin="round"/>
+                    <svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true" fill="none">
+                      <line x1="12" y1="19.8" x2="12" y2="11.15" stroke="currentColor" stroke-width="2.05" stroke-linecap="round"/>
+                      <path d="M7.1 11.15L12 4.6L16.9 11.15" stroke="currentColor" stroke-width="2.05" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                   </button>
                 </div>
