@@ -452,65 +452,99 @@ data:
             overflow: visible;
           }
 
-          /* Pill: one animated border ring (single layer — no extra outer glow) */
+          /* Subtle blurred aurora glow + glass pill (slow drift, no harsh ring) */
           .input-aurora {
             position: relative;
             z-index: 0;
             width: 100%;
-            padding: 2px;
-            margin: 6px 2px 10px;
+            padding: 3px;
+            margin: 10px 2px 12px;
             border-radius: 9999px;
-            overflow: hidden;
-            isolation: isolate;
+            overflow: visible;
+          }
+
+          .input-aurora::before,
+          .input-aurora::after {
+            content: "";
+            position: absolute;
+            pointer-events: none;
+            border-radius: 9999px;
+            z-index: 0;
           }
 
           .input-aurora::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            z-index: 0;
-            border-radius: inherit;
-            pointer-events: none;
-            transform-origin: 50% 50%;
-            will-change: transform;
-            /* dense stops = smoother blend as it rotates one full turn */
-            background: conic-gradient(
-              from 0deg,
-              #2563eb,
-              #4f46e5,
-              #6366f1,
-              #7c3aed,
-              #9333ea,
-              #a78bfa,
-              #22d3ee,
-              #38bdf8,
-              #4f46e5,
-              #6366f1,
-              #14b8a6,
-              #2dd4bf,
-              #8b5cf6,
-              #7c3aed,
-              #2563eb
-            );
-            animation: aurora-border-spin 22s linear infinite;
+            inset: -10px -6px -10px -6px;
+            background:
+              radial-gradient(
+                ellipse 85% 70% at 28% 42%,
+                rgba(99, 102, 241, 0.42) 0%,
+                rgba(124, 58, 237, 0.22) 38%,
+                transparent 68%
+              ),
+              radial-gradient(
+                ellipse 75% 80% at 72% 58%,
+                rgba(59, 130, 246, 0.28) 0%,
+                rgba(139, 92, 246, 0.18) 45%,
+                transparent 70%
+              );
+            filter: blur(28px);
+            opacity: 0.88;
+            will-change: transform, opacity;
+            animation: aurora-drift-a 32s ease-in-out infinite;
           }
 
-          @keyframes aurora-border-spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+          .input-aurora::after {
+            inset: -6px;
+            background:
+              radial-gradient(
+                ellipse 60% 55% at 65% 35%,
+                rgba(167, 139, 250, 0.35) 0%,
+                transparent 58%
+              ),
+              radial-gradient(
+                ellipse 70% 65% at 38% 68%,
+                rgba(56, 189, 248, 0.2) 0%,
+                transparent 62%
+              );
+            filter: blur(22px);
+            opacity: 0.45;
+            animation: aurora-drift-b 40s ease-in-out infinite;
+          }
+
+          @keyframes aurora-drift-a {
+            0%, 100% {
+              transform: translate(-2%, 1%) scale(1);
+              opacity: 0.82;
+            }
+            33% {
+              transform: translate(3%, -2%) scale(1.03);
+              opacity: 0.95;
+            }
+            66% {
+              transform: translate(1.5%, 2.5%) scale(0.98);
+              opacity: 0.88;
+            }
+          }
+
+          @keyframes aurora-drift-b {
+            0%, 100% {
+              transform: translate(2%, -1%) rotate(-2deg);
+              opacity: 0.48;
+            }
+            50% {
+              transform: translate(-3%, 2%) rotate(2deg);
+              opacity: 0.62;
+            }
           }
 
           @media (prefers-reduced-motion: reduce) {
-            .input-aurora::before {
+            .input-aurora::before,
+            .input-aurora::after {
               animation: none;
-              background: linear-gradient(
-                135deg,
-                #2563eb 0%,
-                #9333ea 33%,
-                #22d3ee 66%,
-                #7c3aed 100%
-              );
+              transform: none;
             }
+            .input-aurora::before { opacity: 0.75; }
+            .input-aurora::after { opacity: 0.4; }
           }
 
           .input-shell {
@@ -519,25 +553,31 @@ data:
             display: flex;
             align-items: center;
             gap: 8px;
-            background: linear-gradient(
-              180deg,
-              var(--bg-input-top) 0%,
-              var(--bg-input-bottom) 100%
-            );
-            border: none;
+            background: rgba(22, 24, 34, 0.42);
+            -webkit-backdrop-filter: blur(18px) saturate(1.25);
+            backdrop-filter: blur(18px) saturate(1.25);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 9999px;
-            /* extra right padding + send inset so icon sits off the pill edge */
             padding: 8px 14px 8px 20px;
             min-height: 52px;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,.07);
-            transition: box-shadow 0.2s ease;
+            box-shadow:
+              inset 0 1px 0 rgba(255, 255, 255, 0.14),
+              inset 0 -1px 0 rgba(0, 0, 0, 0.18),
+              0 8px 32px rgba(0, 0, 0, 0.38),
+              0 2px 12px rgba(99, 102, 241, 0.1),
+              0 0 48px rgba(79, 70, 229, 0.08);
+            transition: box-shadow 0.28s ease, border-color 0.28s ease, background 0.28s ease;
           }
 
           .input-shell:focus-within {
-            /* inset only — no second outer ring competing with aurora */
+            background: rgba(26, 28, 40, 0.52);
+            border-color: rgba(165, 180, 252, 0.28);
             box-shadow:
-              inset 0 1px 0 rgba(255,255,255,.1),
-              inset 0 0 0 1px rgba(255,255,255,.06);
+              inset 0 1px 0 rgba(255, 255, 255, 0.16),
+              inset 0 -1px 0 rgba(0, 0, 0, 0.2),
+              0 10px 40px rgba(0, 0, 0, 0.42),
+              0 4px 24px rgba(99, 102, 241, 0.16),
+              0 0 56px rgba(129, 140, 248, 0.12);
           }
 
           #message {
@@ -721,9 +761,9 @@ data:
                 <div class="input-shell">
                   <textarea id="message" rows="1" placeholder="Message the cluster agent…" autocomplete="off"></textarea>
                   <button type="button" id="sendBtn" title="Send" aria-label="Send message">
-                    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none">
-                      <line x1="12" y1="17" x2="12" y2="9.5" stroke="currentColor" stroke-width="1.85" stroke-linecap="round"/>
-                      <path d="M8.5 12.5L12 9l3.5 3.5" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"/>
+                    <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" fill="none">
+                      <line x1="12" y1="17.5" x2="12" y2="9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                      <path d="M8 12.5L12 8.5l4 4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                   </button>
                 </div>
