@@ -98,6 +98,45 @@ rules:
       - list
 
   # =====================================================
+  # Jobs + CronJobs
+  # =====================================================
+  - apiGroups: ["batch"]
+    resources:
+      - jobs
+      - cronjobs
+    verbs:
+      - get
+      - list
+
+  # =====================================================
+  # Storage classes + PVs (cost / provisioning context)
+  # =====================================================
+  - apiGroups: ["storage.k8s.io"]
+    resources:
+      - storageclasses
+    verbs:
+      - get
+      - list
+
+  - apiGroups: [""]
+    resources:
+      - persistentvolumes
+    verbs:
+      - get
+      - list
+
+  # =====================================================
+  # Namespace capacity controls
+  # =====================================================
+  - apiGroups: [""]
+    resources:
+      - resourcequotas
+      - limitranges
+    verbs:
+      - get
+      - list
+
+  # =====================================================
   # Horizontal Pod Autoscalers (HPA)
   # =====================================================
   - apiGroups: ["autoscaling"]
