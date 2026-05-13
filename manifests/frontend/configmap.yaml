@@ -498,7 +498,7 @@ data:
             overflow: visible;
           }
 
-          /* Fixed-radius “border”: animated gradient shows only in padding ring (no SVG stretch) */
+          /* Moving tunnel border: SVG layer (animations) inside fixed-radius clip */
           .input-aurora {
             position: relative;
             z-index: 0;
@@ -509,32 +509,18 @@ data:
             margin: 8px 0 10px;
             border-radius: 24px;
             isolation: isolate;
-            overflow: visible;
-            background: linear-gradient(
-              90deg,
-              #320b32,
-              #9b2381,
-              #d27889,
-              #dc0814,
-              #ead3da,
-              #d27889,
-              #9b2381,
-              #320b32
-            );
-            background-size: 400% 100%;
-            animation: inputAuroraShift 4s linear infinite;
-            box-shadow:
-              0 0 28px rgba(155, 35, 129, 0.22),
-              0 0 52px rgba(210, 120, 137, 0.12);
+            overflow: hidden;
+            background: transparent;
           }
 
-          @keyframes inputAuroraShift {
-            0% {
-              background-position: 0% 50%;
-            }
-            100% {
-              background-position: 100% 50%;
-            }
+          .input-neon-ring {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            display: block;
           }
 
           .input-shell {
@@ -542,7 +528,8 @@ data:
             z-index: 1;
             width: 100%;
             min-width: 0;
-            display: block;
+            display: flex;
+            flex-direction: column;
             border: none;
             border-radius: 21px;
             padding: 6px 8px;
@@ -559,14 +546,129 @@ data:
               0 2px 8px rgba(50, 11, 50, 0.08);
           }
 
-          /* ChatGPT/Claude-style row: icons in fixed columns, textarea flexes; min-width:0 prevents shrink */
+          /* Previews live above row so buttons stay bottom-pinned independently */
+          .composer-attachments {
+            display: none;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            align-items: center;
+            gap: 6px;
+            width: 100%;
+            min-width: 0;
+            padding: 4px 0 8px;
+            margin: -2px 0 0;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scrollbar-width: thin;
+          }
+
+          .composer-attachments.has-items {
+            display: flex;
+          }
+
+          .composer-attachments::-webkit-scrollbar {
+            height: 4px;
+          }
+
+          .composer-attachments::-webkit-scrollbar-thumb {
+            background: rgba(155, 35, 129, 0.28);
+            border-radius: 999px;
+          }
+
+          .compose-att-chip {
+            flex: 0 0 auto;
+            display: inline-flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 5px;
+            max-width: 148px;
+            height: 32px;
+            padding: 0 2px 0 4px;
+            border-radius: 9px;
+            border: 1px solid rgba(50, 11, 50, 0.1);
+            background: rgba(250, 248, 249, 0.95);
+            font-size: 0.72rem;
+            color: var(--text-dim);
+          }
+
+          .compose-att-chip .compose-att-thumb-wrap {
+            flex-shrink: 0;
+            width: 26px;
+            height: 26px;
+            border-radius: 5px;
+            overflow: hidden;
+            background: rgba(50, 11, 50, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .compose-att-chip img.compose-att-thumb {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+          }
+
+          .compose-att-chip .compose-att-file-dot {
+            width: 26px;
+            height: 26px;
+            border-radius: 5px;
+            background: rgba(155, 35, 129, 0.1);
+            color: var(--c-purple);
+            font-size: 0.62rem;
+            font-weight: 700;
+            line-height: 26px;
+            text-align: center;
+            flex-shrink: 0;
+          }
+
+          .compose-att-chip .compose-att-name {
+            flex: 1 1 auto;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            line-height: 1.2;
+          }
+
+          .compose-att-remove {
+            flex-shrink: 0;
+            width: 26px;
+            height: 26px;
+            margin: 0;
+            padding: 0;
+            border: none;
+            border-radius: 7px;
+            background: transparent;
+            color: var(--muted);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition:
+              background 0.18s ease,
+              color 0.15s ease,
+              box-shadow 0.2s ease;
+          }
+
+          .compose-att-remove:hover {
+            background: rgba(220, 8, 20, 0.08);
+            color: var(--c-red);
+            box-shadow:
+              0 0 0 1px rgba(220, 8, 20, 0.12),
+              0 0 14px rgba(220, 8, 20, 0.12);
+          }
+
+          /* Bottom-pinned icons: row cross-axis aligns all items to bottom */
           .composer-row {
             display: flex;
             flex-direction: row;
-            align-items: center;
+            align-items: flex-end;
             width: 100%;
             min-width: 0;
             gap: 4px;
+            flex: 0 0 auto;
           }
 
           .composer-attach-slot {
@@ -574,9 +676,9 @@ data:
             flex: 0 0 38px;
             width: 38px;
             display: flex;
-            align-items: center;
+            align-items: flex-end;
             justify-content: center;
-            align-self: stretch;
+            padding-bottom: 1px;
           }
 
           .composer-textarea-wrap {
@@ -584,16 +686,16 @@ data:
             min-width: 0;
             display: flex;
             align-items: stretch;
-            align-self: stretch;
+            align-self: flex-end;
           }
 
           .composer-send-slot {
             flex: 0 0 42px;
             width: 42px;
             display: flex;
-            align-items: center;
+            align-items: flex-end;
             justify-content: center;
-            align-self: stretch;
+            padding-bottom: 1px;
           }
 
           .composer-file-input {
@@ -612,40 +714,39 @@ data:
             position: relative;
             z-index: 3;
             box-sizing: border-box;
-            width: 34px;
-            height: 34px;
+            width: 36px;
+            height: 36px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             padding: 0;
             border: none;
-            border-radius: 50%;
+            border-radius: 10px;
             cursor: pointer;
-            background: rgba(155, 35, 129, 0.06);
+            background: transparent;
             color: var(--c-purple);
             transition:
-              background 0.2s ease,
               box-shadow 0.22s ease,
               transform 0.15s ease,
-              color 0.15s ease;
+              color 0.15s ease,
+              opacity 0.15s ease;
           }
 
           .attach-btn:hover {
-            background: rgba(210, 120, 137, 0.18);
             color: var(--c-plum);
             box-shadow:
-              0 0 0 1px rgba(155, 35, 129, 0.2),
-              0 0 22px rgba(155, 35, 129, 0.2),
-              0 0 36px rgba(210, 120, 137, 0.14);
+              0 0 0 1px rgba(155, 35, 129, 0.18),
+              0 0 16px rgba(155, 35, 129, 0.18),
+              0 0 28px rgba(210, 120, 137, 0.12);
           }
 
           .attach-btn:active {
-            transform: scale(0.94);
+            transform: scale(0.96);
           }
 
           .attach-btn svg {
-            width: 22px;
-            height: 22px;
+            width: 25px;
+            height: 25px;
             stroke: currentColor;
             fill: none;
             display: block;
@@ -655,8 +756,8 @@ data:
 
           .attach-btn .attach-badge {
             position: absolute;
-            top: -2px;
-            right: -2px;
+            top: -1px;
+            right: -1px;
             min-width: 16px;
             height: 16px;
             padding: 0 4px;
@@ -676,23 +777,41 @@ data:
           }
 
           .attach-btn.has-files {
-            background: rgba(210, 120, 137, 0.14);
+            opacity: 1;
+          }
+
+          .input-shell.has-attached .attach-btn:not(:hover):not(:active) {
+            color: var(--c-plum);
           }
 
           @media (prefers-reduced-motion: reduce) {
             .attach-btn:hover {
               box-shadow: none;
             }
+            .compose-att-remove:hover {
+              box-shadow: none;
+            }
+            .input-neon-ring {
+              display: none;
+            }
             .input-aurora {
-              animation: none;
               background: linear-gradient(
                 135deg,
                 var(--c-purple),
                 var(--c-pink),
                 var(--c-purple)
               );
-              background-size: 100% 100%;
-              box-shadow: 0 1px 4px rgba(50, 11, 50, 0.1);
+              animation: none;
+              box-shadow: 0 1px 8px rgba(50, 11, 50, 0.1);
+            }
+          }
+
+          /* Soft outer glow complements SVG tunnel glow */
+          @media not (prefers-reduced-motion: reduce) {
+            .input-aurora {
+              box-shadow:
+                0 0 24px rgba(155, 35, 129, 0.18),
+                0 0 48px rgba(210, 120, 137, 0.1);
             }
           }
 
@@ -953,7 +1072,55 @@ data:
           <div class="composer">
             <div class="composer-inner">
               <div class="input-aurora">
+                <svg class="input-neon-ring" viewBox="0 0 500 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                  <defs>
+                    <filter id="inputNeonBlur" x="-50%" y="-50%" width="200%" height="200%">
+                      <feGaussianBlur in="SourceGraphic" stdDeviation="5.5" result="b"/>
+                      <feGaussianBlur in="b" stdDeviation="2.2" result="b2"/>
+                      <feMerge>
+                        <feMergeNode in="b2"/>
+                      </feMerge>
+                    </filter>
+                    <linearGradient id="inputChromaticTunnel" x1="0" y1="0" x2="500" y2="0" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#320B32"/>
+                      <stop offset="10%" stop-color="#9B2381"/>
+                      <stop offset="22%" stop-color="#D27889"/>
+                      <stop offset="34%" stop-color="#DC0814"/>
+                      <stop offset="46%" stop-color="#EAD3DA"/>
+                      <stop offset="58%" stop-color="#D27889"/>
+                      <stop offset="70%" stop-color="#9B2381"/>
+                      <stop offset="82%" stop-color="#DC0814"/>
+                      <stop offset="94%" stop-color="#320B32"/>
+                      <stop offset="100%" stop-color="#320B32"/>
+                      <animateTransform attributeName="gradientTransform" type="rotate" from="0 250 50" to="360 250 50" dur="3.2s" repeatCount="indefinite"/>
+                    </linearGradient>
+                    <linearGradient id="inputChromaticTunnelB" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#EAD3DA" stop-opacity="0.95"/>
+                      <stop offset="20%" stop-color="#D27889"/>
+                      <stop offset="40%" stop-color="#9B2381"/>
+                      <stop offset="58%" stop-color="#DC0814"/>
+                      <stop offset="78%" stop-color="#320B32"/>
+                      <stop offset="100%" stop-color="#EAD3DA" stop-opacity="0.95"/>
+                      <animateTransform attributeName="gradientTransform" type="rotate" from="360 250 50" to="0 250 50" dur="2.6s" repeatCount="indefinite"/>
+                    </linearGradient>
+                    <linearGradient id="inputNeonSpark" x1="0" y1="0" x2="180" y2="0" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#320B32" stop-opacity="0"/>
+                      <stop offset="35%" stop-color="#EAD3DA" stop-opacity="0.95"/>
+                      <stop offset="50%" stop-color="#FFFFFF" stop-opacity="0.55"/>
+                      <stop offset="65%" stop-color="#D27889"/>
+                      <stop offset="100%" stop-color="#320B32" stop-opacity="0"/>
+                      <animateTransform attributeName="gradientTransform" type="translate" additive="sum" values="-80,0;520,0;-80,0" keyTimes="0;0.85;1" dur="2s" repeatCount="indefinite"/>
+                    </linearGradient>
+                  </defs>
+                  <rect x="2.5" y="2.5" width="495" height="95" rx="47.5" ry="47.5" fill="none" pathLength="100" stroke="url(#inputChromaticTunnel)" stroke-width="12" stroke-linecap="round" opacity="0.72" filter="url(#inputNeonBlur)"/>
+                  <rect x="2.5" y="2.5" width="495" height="95" rx="47.5" ry="47.5" fill="none" pathLength="100" stroke="url(#inputChromaticTunnelB)" stroke-width="4.25" stroke-linecap="round" opacity="0.9"/>
+                  <rect x="2.5" y="2.5" width="495" height="95" rx="47.5" ry="47.5" fill="none" pathLength="100" stroke="url(#inputChromaticTunnel)" stroke-width="2.25" stroke-linecap="round" opacity="0.88"/>
+                  <rect x="2.5" y="2.5" width="495" height="95" rx="47.5" ry="47.5" fill="none" pathLength="100" stroke="url(#inputNeonSpark)" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="28 72" opacity="0.95">
+                    <animate attributeName="stroke-dashoffset" values="0;100" dur="2.4s" repeatCount="indefinite"/>
+                  </rect>
+                </svg>
                 <div class="input-shell">
+                  <div class="composer-attachments" id="composerAttachments" hidden></div>
                   <div class="composer-row">
                     <div class="composer-attach-slot">
                       <input type="file" id="attachmentInput" class="composer-file-input" multiple tabindex="-1" aria-hidden="true" accept="image/*,.pdf,.txt,.md,.yaml,.yml,.json,.csv,.png,.jpg,.jpeg,.gif,.webp,.svg,application/pdf,*/*"/>
@@ -973,7 +1140,7 @@ data:
                   </div>
                 </div>
               </div>
-              <p class="hint">Enter to send · Shift+Enter for new line · paperclip to attach · Shift+click clip to clear</p>
+              <p class="hint">Enter to send · Shift+Enter for new line · attach files · × on a chip removes it · Shift+click clip clears all</p>
             </div>
           </div>
         </div>
@@ -989,6 +1156,7 @@ data:
           var attachmentInput = document.getElementById("attachmentInput");
           var attachBtn = document.getElementById("attachBtn");
           var attachBadge = document.getElementById("attachBadge");
+          var composerAttachmentsEl = document.getElementById("composerAttachments");
           var emptyState = document.getElementById("emptyState");
           var sidebarList = document.getElementById("sidebarList");
           var chatSearch = document.getElementById("chatSearch");
@@ -1007,6 +1175,8 @@ data:
           var modelLabel = "gemini";
           var apiBaseDisplay = "";
           var selectedFiles = [];
+          /** parallel object URLs for image previews ("" if not image) */
+          var attachmentUrlMap = [];
 
           function escapeHtml(text) {
             var d = document.createElement("div");
@@ -1379,18 +1549,97 @@ data:
 
           function syncAttachmentUi() {
             var n = selectedFiles.length;
-            if (!attachBadge) return;
+            var shell = messageInput && messageInput.closest(".input-shell");
+            if (shell) {
+              if (n) shell.classList.add("has-attached");
+              else shell.classList.remove("has-attached");
+            }
+            if (!attachBadge) {
+              renderComposerAttachments();
+              return;
+            }
             if (n < 1) {
               attachBadge.setAttribute("hidden", "hidden");
               if (attachBtn) attachBtn.classList.remove("has-files");
+            } else {
+              attachBadge.removeAttribute("hidden");
+              attachBadge.textContent = n > 9 ? "9+" : String(n);
+              if (attachBtn) attachBtn.classList.add("has-files");
+            }
+            renderComposerAttachments();
+          }
+
+          function renderComposerAttachments() {
+            if (!composerAttachmentsEl) return;
+            while (composerAttachmentsEl.firstChild) {
+              composerAttachmentsEl.removeChild(composerAttachmentsEl.firstChild);
+            }
+            if (selectedFiles.length < 1) {
+              composerAttachmentsEl.classList.remove("has-items");
+              composerAttachmentsEl.setAttribute("hidden", "hidden");
               return;
             }
-            attachBadge.removeAttribute("hidden");
-            attachBadge.textContent = n > 9 ? "9+" : String(n);
-            if (attachBtn) attachBtn.classList.add("has-files");
+            composerAttachmentsEl.removeAttribute("hidden");
+            composerAttachmentsEl.classList.add("has-items");
+            var i;
+            for (i = 0; i < selectedFiles.length; i++) {
+              (function (idx) {
+                var file = selectedFiles[idx];
+                var chip = document.createElement("div");
+                chip.className = "compose-att-chip";
+                var thumbUrl = attachmentUrlMap[idx];
+                if (thumbUrl) {
+                  var tw = document.createElement("div");
+                  tw.className = "compose-att-thumb-wrap";
+                  var img = document.createElement("img");
+                  img.className = "compose-att-thumb";
+                  img.alt = "";
+                  img.loading = "lazy";
+                  img.src = thumbUrl;
+                  tw.appendChild(img);
+                  chip.appendChild(tw);
+                } else {
+                  var dot = document.createElement("div");
+                  dot.className = "compose-att-file-dot";
+                  var base = file.name.replace(/^.*\./, "");
+                  dot.textContent = base ? base.slice(0, 2).toUpperCase() : "–";
+                  chip.appendChild(dot);
+                }
+                var nameEl = document.createElement("span");
+                nameEl.className = "compose-att-name";
+                nameEl.textContent = file.name;
+                nameEl.title = file.name;
+                chip.appendChild(nameEl);
+                var rm = document.createElement("button");
+                rm.type = "button";
+                rm.className = "compose-att-remove";
+                rm.setAttribute("data-idx", String(idx));
+                rm.setAttribute("aria-label", "Remove " + file.name);
+                rm.innerHTML =
+                  '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>';
+                chip.appendChild(rm);
+                composerAttachmentsEl.appendChild(chip);
+              })(i);
+            }
+          }
+
+          function removeAttachmentAt(idx) {
+            if (idx < 0 || idx >= selectedFiles.length) return;
+            if (attachmentUrlMap[idx]) {
+              URL.revokeObjectURL(attachmentUrlMap[idx]);
+            }
+            selectedFiles.splice(idx, 1);
+            attachmentUrlMap.splice(idx, 1);
+            syncAttachmentUi();
+            syncSendArrow();
           }
 
           function clearAttachments() {
+            var i;
+            for (i = 0; i < attachmentUrlMap.length; i++) {
+              if (attachmentUrlMap[i]) URL.revokeObjectURL(attachmentUrlMap[i]);
+            }
+            attachmentUrlMap = [];
             selectedFiles = [];
             syncAttachmentUi();
           }
@@ -1570,12 +1819,27 @@ data:
               var files = attachmentInput.files;
               if (!files || !files.length) return;
               for (var fi = 0; fi < files.length; fi++) {
-                selectedFiles.push(files[fi]);
+                var f = files[fi];
+                selectedFiles.push(f);
+                if (f.type && f.type.indexOf("image/") === 0) {
+                  attachmentUrlMap.push(URL.createObjectURL(f));
+                } else {
+                  attachmentUrlMap.push("");
+                }
               }
               attachmentInput.value = "";
               syncAttachmentUi();
               syncSendArrow();
             });
+
+            if (composerAttachmentsEl) {
+              composerAttachmentsEl.addEventListener("click", function (e) {
+                var rm = e.target.closest(".compose-att-remove");
+                if (!rm || !composerAttachmentsEl.contains(rm)) return;
+                var idx = parseInt(rm.getAttribute("data-idx"), 10);
+                if (!isNaN(idx)) removeAttachmentAt(idx);
+              });
+            }
           }
 
           messageInput.addEventListener("keydown", function (e) {
