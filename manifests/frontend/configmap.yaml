@@ -557,15 +557,17 @@ data:
           }
 
           #message {
+            box-sizing: border-box;
             flex: 1;
             border: none;
             outline: none;
             resize: none;
             min-height: 36px;
             max-height: 200px;
+            height: 36px;
             padding: 8px 8px 8px 0;
-            overflow-y: auto;
             overflow-x: hidden;
+            overflow-y: hidden;
             font-family: var(--font-ui);
             font-size: 0.895rem;
             font-weight: 400;
@@ -573,9 +575,34 @@ data:
             letter-spacing: 0.01em;
             background: transparent;
             color: var(--text);
+            transition: height 0.18s cubic-bezier(0.25, 0.46, 0.45, 0.94);
           }
 
-          /* Chromium/WebKit: remove default up/down stepper arrows; standard scrollbar thumb/track remain */
+          /* Thin scrollbar only at max height when content overflows */
+          #message.is-overflowing {
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(155, 35, 129, 0.4) transparent;
+          }
+
+          #message.is-overflowing::-webkit-scrollbar {
+            width: 5px;
+          }
+
+          #message.is-overflowing::-webkit-scrollbar-track {
+            background: transparent;
+          }
+
+          #message.is-overflowing::-webkit-scrollbar-thumb {
+            background: rgba(155, 35, 129, 0.4);
+            border-radius: 999px;
+          }
+
+          #message.is-overflowing::-webkit-scrollbar-thumb:hover {
+            background: rgba(155, 35, 129, 0.55);
+          }
+
+          /* Chromium/WebKit: remove stepper arrows (legacy scrollbar buttons) */
           #message::-webkit-scrollbar-button,
           #message::-webkit-scrollbar-button:single-button,
           #message::-webkit-scrollbar-button:double-button,
@@ -1238,10 +1265,20 @@ data:
             if (row && row.parentNode) row.parentNode.removeChild(row);
           }
 
+          var TA_MIN_H = 36;
+          var TA_MAX_H = 200;
+
           function autoResize() {
-            messageInput.style.height = "auto";
-            messageInput.style.height =
-              Math.min(messageInput.scrollHeight, 200) + "px";
+            var el = messageInput;
+            el.style.height = "auto";
+            var sh = el.scrollHeight;
+            var target = Math.max(TA_MIN_H, Math.min(sh, TA_MAX_H));
+            el.style.height = target + "px";
+            if (sh > TA_MAX_H) {
+              el.classList.add("is-overflowing");
+            } else {
+              el.classList.remove("is-overflowing");
+            }
           }
 
           function syncSendArrow() {
@@ -1407,6 +1444,7 @@ data:
           renderThread();
           fetchModelMeta();
           syncSendArrow();
+          autoResize();
           messageInput.focus();
 
           btnToggleSearch.addEventListener("click", function () {
