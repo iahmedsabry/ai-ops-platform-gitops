@@ -789,7 +789,7 @@ data:
             display: flex;
             flex-direction: row;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             width: 100%;
             padding: 9px 11px;
             margin: 0;
@@ -1160,9 +1160,8 @@ data:
             </button>
           </div>
           <button type="button" class="link-new-chat" id="btnNewChat">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 20h9"/>
-              <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"/>
             </svg>
             New chat
           </button>
@@ -1447,14 +1446,101 @@ data:
           }
 
           function titleFromFirstMessage(text) {
-            var raw = String(text).replace(/\s+/g, " ").trim();
+            var attachRe = /^\[Attached file\(s\):[^\]]*\]\s*\n*/i;
+            var raw = String(text).replace(attachRe, "").replace(/\s+/g, " ").trim();
             if (!raw) return "Chat";
-            var cut = raw.split(/[.!?]\s/)[0];
-            var sentence = cut && cut.length < raw.length ? cut : raw;
-            if (sentence.length > 56) {
-              return sentence.slice(0, 54).replace(/\s+\S*$/, "") + "…";
+
+            var topic = raw.replace(/[?!.]+$/g, "").trim();
+            var lo = topic.toLowerCase();
+            var pats = [
+              /^what\s+is\s+the\s+/,
+              /^what\s+are\s+the\s+/,
+              /^what\s+is\s+/,
+              /^what\s+are\s+/,
+              /^what\s+/,
+              /^how\s+do\s+i\s+/,
+              /^how\s+can\s+i\s+/,
+              /^how\s+to\s+/,
+              /^how\s+does\s+/,
+              /^how\s+are\s+/,
+              /^how\s+/,
+              /^why\s+is\s+/,
+              /^why\s+does\s+/,
+              /^why\s+are\s+/,
+              /^why\s+/,
+              /^when\s+(is|are|do|does)\s+/,
+              /^when\s+/,
+              /^where\s+(is|are)\s+the\s+/,
+              /^where\s+(is|are)\s+/,
+              /^where\s+/,
+              /^which\s+/,
+              /^who\s+/,
+              /^whose\s+/,
+              /^can\s+you\s+/,
+              /^could\s+you\s+/,
+              /^would\s+you\s+/,
+              /^please\s+/,
+              /^tell\s+me\s+/,
+              /^show\s+me\s+/,
+              /^help\s+me\s+/,
+              /^give\s+me\s+/,
+              /^i\s+need\s+to\s+know\s+/,
+              /^i\s+want\s+to\s+know\s+/,
+              /^i'd\s+like\s+to\s+know\s+/,
+              /^explain\s+/,
+              /^describe\s+/,
+              /^summarize\s+/,
+              /^outline\s+/,
+              /^list\s+/,
+              /^analyze\s+/
+            ];
+
+            var loop;
+            do {
+              loop = false;
+              for (var pi = 0; pi < pats.length; pi++) {
+                var nx = lo.replace(pats[pi], "").trim();
+                if (nx !== lo) {
+                  lo = nx;
+                  loop = true;
+                }
+              }
+            } while (loop);
+
+            lo = lo.replace(/^(the|a|an)\s+/, "").trim();
+
+            function softTruncTitle(s, max) {
+              if (s.length <= max) return s;
+              var cut = s.slice(0, max - 1);
+              var sp = cut.lastIndexOf(" ");
+              if (sp > max * 0.38) cut = cut.slice(0, sp);
+              return cut + "…";
             }
-            return sentence;
+
+            function capWord(s) {
+              if (!s) return "Chat";
+              return s.charAt(0).toUpperCase() + s.slice(1);
+            }
+
+            var stem = lo || topic.toLowerCase();
+            stem = stem.replace(/^(the|a|an)\s+/, "").trim();
+            if (!stem) stem = topic.toLowerCase();
+
+            var candidate = capWord(softTruncTitle(stem, 50));
+            var fullNorm = topic.toLowerCase();
+            var candNorm = candidate.replace(/…$/, "").toLowerCase();
+
+            if (
+              candNorm === fullNorm ||
+              (fullNorm.indexOf(candNorm) === 0 &&
+                fullNorm.length <= candNorm.length + 6)
+            ) {
+              candidate = capWord(
+                softTruncTitle("Topic · " + softTruncTitle(topic, 38), 54)
+              );
+            }
+
+            return candidate;
           }
 
           function touchSession(sess) {
