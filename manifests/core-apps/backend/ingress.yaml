@@ -1,3 +1,6 @@
+# OUTAGE SIMULATION — backend unreachable via ingress:
+# The Service reference below targets `backend-outage-drill`, which must NOT exist so the ALB rule has no endpoints (503/unhealthy).
+# To restore traffic: change `backend-outage-drill` → `backend` on the service.name line below and sync/apply.
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -9,7 +12,7 @@ metadata:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
 
-    alb.ingress.kubernetes.io/group.name: shared-alb  
+    alb.ingress.kubernetes.io/group.name: shared-alb
 
     alb.ingress.kubernetes.io/group.order: "9"
 
@@ -19,10 +22,10 @@ spec:
   rules:
     - http:
         paths:
-          - path: /backend        
+          - path: /backend
             pathType: Prefix
             backend:
               service:
-                name: backend
+                name: backend-outage-drill
                 port:
                   number: 80

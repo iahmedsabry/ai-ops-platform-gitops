@@ -190,12 +190,18 @@ data:
             color: var(--text);
             font-size: 0.84rem;
             outline: none;
-            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+            transition: border-color 0.15s ease;
           }
 
           #chatSearch:focus {
+            border-color: rgba(155, 35, 129, 0.35);
+            outline: none;
+            box-shadow: none;
+          }
+
+          #chatSearch:focus-visible {
             border-color: rgba(155, 35, 129, 0.45);
-            box-shadow: 0 0 0 3px rgba(155, 35, 129, 0.12);
+            box-shadow: none;
           }
 
           #chatSearch::placeholder {
@@ -1165,7 +1171,7 @@ data:
             </svg>
             New chat
           </button>
-          <div id="sidebarSearchPanel" class="sidebar-search-panel">
+          <div id="sidebarSearchPanel" class="sidebar-search-panel open">
             <input type="search" id="chatSearch" placeholder="Search chats" autocomplete="off" />
           </div>
           <h2 class="sidebar-heading">Chats</h2>
@@ -2127,6 +2133,7 @@ data:
           btnNewChat.addEventListener("click", startNewChat);
 
           chatSearch.addEventListener("input", renderSidebarList);
+          chatSearch.addEventListener("search", renderSidebarList);
 
           btnMenu.addEventListener("click", function () {
             sidebar.classList.toggle("open");
