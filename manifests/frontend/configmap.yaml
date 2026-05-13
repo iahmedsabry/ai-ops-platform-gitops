@@ -514,27 +514,19 @@ data:
             z-index: 28;
           }
 
-          /* Composer: thin KAI gradient hairline (no glow) */
+          /* Composer: light, even border (no heavy gradient ring) */
           .input-aurora {
             position: relative;
             z-index: 0;
             width: 100%;
             min-width: 0;
             box-sizing: border-box;
-            padding: 1px;
-            margin: 8px 0 10px;
+            padding: 0;
+            margin: 8px 0;
             border-radius: 22px;
             isolation: isolate;
             overflow: visible;
-            background: linear-gradient(
-              110deg,
-              #320B32 0%,
-              #9B2381 26%,
-              #D27889 50%,
-              #DC0814 72%,
-              #9B2381 92%,
-              #320B32 100%
-            );
+            background: transparent;
             box-shadow: none;
           }
 
@@ -545,20 +537,28 @@ data:
             min-width: 0;
             display: flex;
             flex-direction: column;
-            border: none;
-            border-radius: 21px;
+            border: 1px solid rgba(155, 35, 129, 0.14);
+            border-radius: 22px;
             padding: 6px 8px;
             min-height: 48px;
             background: #ffffff;
-            box-shadow: 0 1px 3px rgba(50, 11, 50, 0.08);
-            transition: box-shadow 0.2s ease;
+            box-shadow:
+              0 0 0 1px rgba(255, 255, 255, 0.65) inset,
+              0 1px 2px rgba(50, 11, 50, 0.04),
+              0 -1px 2px rgba(50, 11, 50, 0.03);
+            transition:
+              border-color 0.2s ease,
+              box-shadow 0.2s ease;
             overflow: visible;
           }
 
           .input-shell:focus-within {
+            border-color: rgba(155, 35, 129, 0.22);
             box-shadow:
-              0 0 0 1px rgba(155, 35, 129, 0.25),
-              0 2px 8px rgba(50, 11, 50, 0.08);
+              0 0 0 1px rgba(255, 255, 255, 0.7) inset,
+              0 0 0 1px rgba(155, 35, 129, 0.1),
+              0 2px 6px rgba(50, 11, 50, 0.05),
+              0 -1px 4px rgba(50, 11, 50, 0.04);
           }
 
           /* Previews live above row so buttons stay bottom-pinned independently */
@@ -1064,11 +1064,27 @@ data:
           .sidebar-scrim.show { display: block; }
 
           @media (min-width: 881px) {
-            #btnSidebarClose {
-              display: none;
+            .sidebar {
+              transition:
+                width 0.22s ease,
+                min-width 0.22s ease,
+                opacity 0.2s ease,
+                padding 0.2s ease;
             }
-            .sidebar-toolbar {
-              display: none;
+
+            .layout.layout--sidebar-collapsed .sidebar {
+              width: 0 !important;
+              min-width: 0 !important;
+              opacity: 0;
+              padding-left: 0;
+              padding-right: 0;
+              border-right-width: 0;
+              overflow: hidden;
+              pointer-events: none;
+            }
+
+            .layout.layout--sidebar-collapsed #btnMenu {
+              display: inline-flex !important;
             }
           }
 
@@ -1092,8 +1108,11 @@ data:
       <div class="layout">
         <aside class="sidebar" id="sidebar" aria-label="Chats">
           <div class="sidebar-toolbar">
-            <button type="button" class="icon-plain" id="btnSidebarClose" aria-label="Close menu">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+            <button type="button" class="icon-plain" id="btnSidebarClose" title="Hide chat list" aria-label="Hide chat list">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="4.25" y="5.25" width="15.5" height="13.5" rx="2.25" ry="2.25" fill="none"/>
+                <line x1="9.75" y1="6.5" x2="9.75" y2="17.5"/>
+              </svg>
             </button>
           </div>
           <button type="button" class="link-new-chat" id="btnNewChat">
@@ -1195,6 +1214,8 @@ data:
           var sidebarScrim = document.getElementById("sidebarScrim");
           var btnMenu = document.getElementById("btnMenu");
           var btnSidebarClose = document.getElementById("btnSidebarClose");
+          var layoutRoot =
+            document.querySelector(".layout") || document.body;
 
           var busy = false;
           var store = { version: 1, sessions: [], activeId: null };
@@ -1549,6 +1570,7 @@ data:
                     renderThread();
                     sidebar.classList.remove("open");
                     sidebarScrim.classList.remove("show");
+                    layoutRoot.classList.remove("layout--sidebar-collapsed");
                   };
                 }(sess.id)
               );
@@ -1804,6 +1826,7 @@ data:
             messageInput.focus();
             sidebar.classList.remove("open");
             sidebarScrim.classList.remove("show");
+            layoutRoot.classList.remove("layout--sidebar-collapsed");
           }
 
           function appendToStore(role, text, isError) {
@@ -1988,7 +2011,20 @@ data:
 
           btnNewChat.addEventListener("click", startNewChat);
 
+          function isWideLayout() {
+            return (
+              typeof window.matchMedia !== "undefined" &&
+              window.matchMedia("(min-width: 881px)").matches
+            );
+          }
+
           btnMenu.addEventListener("click", function () {
+            if (isWideLayout()) {
+              layoutRoot.classList.remove("layout--sidebar-collapsed");
+              sidebar.classList.remove("open");
+              sidebarScrim.classList.remove("show");
+              return;
+            }
             sidebar.classList.toggle("open");
             sidebarScrim.classList.toggle("show");
           });
@@ -2025,6 +2061,9 @@ data:
           btnSidebarClose.addEventListener("click", function () {
             sidebar.classList.remove("open");
             sidebarScrim.classList.remove("show");
+            if (isWideLayout()) {
+              layoutRoot.classList.add("layout--sidebar-collapsed");
+            }
           });
         })();
       </script>
