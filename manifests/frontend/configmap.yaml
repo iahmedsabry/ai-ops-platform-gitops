@@ -68,6 +68,18 @@ data:
 
           body { background: var(--bg-main); }
 
+          .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+          }
+
           button {
             font: inherit;
             cursor: pointer;
@@ -176,7 +188,7 @@ data:
           }
 
           .sidebar-search-panel.open {
-            max-height: 56px;
+            max-height: 140px;
             opacity: 1;
             padding: 2px 12px 12px;
           }
@@ -206,6 +218,100 @@ data:
 
           #chatSearch::placeholder {
             color: var(--muted);
+          }
+
+          .sidebar-search-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+          }
+
+          .thread-find-bar {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: nowrap;
+            padding: 7px 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(155, 35, 129, 0.22);
+            background: linear-gradient(
+              180deg,
+              rgba(255, 255, 255, 0.96) 0%,
+              rgba(234, 211, 218, 0.35) 100%
+            );
+            box-shadow: 0 1px 2px rgba(50, 11, 50, 0.05);
+          }
+
+          .thread-find-bar[hidden] {
+            display: none !important;
+          }
+
+          .thread-find-count {
+            flex: 1;
+            min-width: 0;
+            font-size: 0.78rem;
+            font-variant-numeric: tabular-nums;
+            font-weight: 600;
+            color: var(--c-purple);
+            letter-spacing: 0.02em;
+          }
+
+          .thread-find-sep {
+            width: 1px;
+            height: 18px;
+            flex-shrink: 0;
+            background: rgba(50, 11, 50, 0.12);
+            border-radius: 1px;
+          }
+
+          .thread-find-btn {
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.75);
+            color: var(--c-plum);
+            cursor: pointer;
+            transition:
+              background 0.15s ease,
+              color 0.12s ease,
+              box-shadow 0.15s ease;
+            box-shadow: inset 0 0 0 1px rgba(50, 11, 50, 0.08);
+          }
+
+          .thread-find-btn:hover {
+            background: rgba(210, 120, 137, 0.16);
+            color: var(--c-purple);
+          }
+
+          .thread-find-btn:active {
+            transform: scale(0.97);
+          }
+
+          .thread-find-btn:focus-visible {
+            outline: 2px solid rgba(155, 35, 129, 0.45);
+            outline-offset: 1px;
+          }
+
+          .thread-find-btn:disabled {
+            opacity: 0.38;
+            cursor: default;
+            transform: none;
+          }
+
+          .thread-find-btn svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
           }
 
           .sidebar-heading {
@@ -541,6 +647,13 @@ data:
             border-radius: 12px;
           }
 
+          .msg-msg.msg-search-current > .bubble-shell > .bubble {
+            outline: 2px solid rgba(155, 35, 129, 0.55);
+            outline-offset: 2px;
+            border-radius: 12px;
+            box-shadow: 0 0 0 1px rgba(210, 120, 137, 0.35);
+          }
+
           .msg-msg.msg-search-jump-flash > .bubble-shell > .bubble {
             animation: searchJumpFlash 1.2s ease 1;
           }
@@ -615,32 +728,28 @@ data:
             z-index: 28;
           }
 
-          /* Moving tunnel border: SVG layer (animations) inside fixed-radius clip */
+          /* Composer: static KAI wordmark gradient border (no neon / glow) */
           .input-aurora {
             position: relative;
             z-index: 0;
             width: 100%;
             min-width: 0;
             box-sizing: border-box;
-            padding: 3px;
+            padding: 2px;
             margin: 8px 0 10px;
             border-radius: 24px;
             isolation: isolate;
             overflow: visible;
-            background: transparent;
-          }
-
-          /* Clip tunnel ring to pill without clipping the attach popup (shell covers center) */
-          .input-neon-ring {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            display: block;
-            border-radius: 24px;
-            overflow: hidden;
+            background: linear-gradient(
+              110deg,
+              #320B32 0%,
+              #9B2381 26%,
+              #D27889 50%,
+              #DC0814 72%,
+              #9B2381 92%,
+              #320B32 100%
+            );
+            box-shadow: none;
           }
 
           .input-shell {
@@ -651,7 +760,7 @@ data:
             display: flex;
             flex-direction: column;
             border: none;
-            border-radius: 21px;
+            border-radius: 22px;
             padding: 6px 8px;
             min-height: 48px;
             background: #ffffff;
@@ -987,28 +1096,6 @@ data:
             .compose-att-remove:hover {
               box-shadow: none;
             }
-            .input-neon-ring {
-              display: none;
-            }
-            .input-aurora {
-              background: linear-gradient(
-                135deg,
-                var(--c-purple),
-                var(--c-pink),
-                var(--c-purple)
-              );
-              animation: none;
-              box-shadow: 0 1px 8px rgba(50, 11, 50, 0.1);
-            }
-          }
-
-          /* Soft outer glow complements SVG tunnel glow */
-          @media not (prefers-reduced-motion: reduce) {
-            .input-aurora {
-              box-shadow:
-                0 0 14px rgba(155, 35, 129, 0.1),
-                0 0 28px rgba(210, 120, 137, 0.06);
-            }
           }
 
           #message {
@@ -1233,7 +1320,20 @@ data:
             New chat
           </button>
           <div id="sidebarSearchPanel" class="sidebar-search-panel open">
-            <input type="search" id="chatSearch" placeholder="Search chats" autocomplete="off" />
+            <div class="sidebar-search-stack">
+              <input type="search" id="chatSearch" placeholder="Search chats" autocomplete="off" aria-describedby="threadFindHint" />
+              <div id="threadFindBar" class="thread-find-bar" hidden>
+                <span id="threadFindCount" class="thread-find-count" aria-live="polite">0 / 0</span>
+                <span class="thread-find-sep" aria-hidden="true"></span>
+                <button type="button" class="thread-find-btn" id="threadFindPrev" title="Previous match" aria-label="Previous match in this chat">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 15l-6-6-6 6"/></svg>
+                </button>
+                <button type="button" class="thread-find-btn" id="threadFindNext" title="Next match" aria-label="Next match in this chat">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+              </div>
+              <span id="threadFindHint" class="visually-hidden">When matches exist in this chat, Enter goes to the next match and Shift+Enter to the previous. Use the arrow buttons to jump between highlights.</span>
+            </div>
           </div>
           <h2 class="sidebar-heading">Chats</h2>
           <div class="sidebar-list-scroll" id="sidebarList"></div>
@@ -1267,53 +1367,6 @@ data:
           <div class="composer">
             <div class="composer-inner">
               <div class="input-aurora">
-                <svg class="input-neon-ring" viewBox="0 0 500 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-                  <defs>
-                    <filter id="inputNeonBlur" x="-50%" y="-50%" width="200%" height="200%">
-                      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="b"/>
-                      <feGaussianBlur in="b" stdDeviation="1.7" result="b2"/>
-                      <feMerge>
-                        <feMergeNode in="b2"/>
-                      </feMerge>
-                    </filter>
-                    <linearGradient id="inputChromaticTunnel" x1="0" y1="0" x2="500" y2="0" gradientUnits="userSpaceOnUse">
-                      <stop offset="0%" stop-color="#320B32"/>
-                      <stop offset="10%" stop-color="#9B2381"/>
-                      <stop offset="22%" stop-color="#D27889"/>
-                      <stop offset="34%" stop-color="#DC0814"/>
-                      <stop offset="46%" stop-color="#EAD3DA"/>
-                      <stop offset="58%" stop-color="#D27889"/>
-                      <stop offset="70%" stop-color="#9B2381"/>
-                      <stop offset="82%" stop-color="#DC0814"/>
-                      <stop offset="94%" stop-color="#320B32"/>
-                      <stop offset="100%" stop-color="#320B32"/>
-                      <animateTransform attributeName="gradientTransform" type="rotate" from="0 250 50" to="360 250 50" dur="5.5s" repeatCount="indefinite"/>
-                    </linearGradient>
-                    <linearGradient id="inputChromaticTunnelB" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
-                      <stop offset="0%" stop-color="#EAD3DA" stop-opacity="0.95"/>
-                      <stop offset="20%" stop-color="#D27889"/>
-                      <stop offset="40%" stop-color="#9B2381"/>
-                      <stop offset="58%" stop-color="#DC0814"/>
-                      <stop offset="78%" stop-color="#320B32"/>
-                      <stop offset="100%" stop-color="#EAD3DA" stop-opacity="0.95"/>
-                      <animateTransform attributeName="gradientTransform" type="rotate" from="360 250 50" to="0 250 50" dur="4.8s" repeatCount="indefinite"/>
-                    </linearGradient>
-                    <linearGradient id="inputNeonSpark" x1="0" y1="0" x2="180" y2="0" gradientUnits="userSpaceOnUse">
-                      <stop offset="0%" stop-color="#320B32" stop-opacity="0"/>
-                      <stop offset="35%" stop-color="#EAD3DA" stop-opacity="0.95"/>
-                      <stop offset="50%" stop-color="#FFFFFF" stop-opacity="0.55"/>
-                      <stop offset="65%" stop-color="#D27889"/>
-                      <stop offset="100%" stop-color="#320B32" stop-opacity="0"/>
-                      <animateTransform attributeName="gradientTransform" type="translate" additive="sum" values="-80,0;520,0;-80,0" keyTimes="0;0.85;1" dur="2.9s" repeatCount="indefinite"/>
-                    </linearGradient>
-                  </defs>
-                  <rect x="2.5" y="2.5" width="495" height="95" rx="47.5" ry="47.5" fill="none" pathLength="100" stroke="url(#inputChromaticTunnel)" stroke-width="9" stroke-linecap="round" opacity="0.42" filter="url(#inputNeonBlur)"/>
-                  <rect x="2.5" y="2.5" width="495" height="95" rx="47.5" ry="47.5" fill="none" pathLength="100" stroke="url(#inputChromaticTunnelB)" stroke-width="3.25" stroke-linecap="round" opacity="0.58"/>
-                  <rect x="2.5" y="2.5" width="495" height="95" rx="47.5" ry="47.5" fill="none" pathLength="100" stroke="url(#inputChromaticTunnel)" stroke-width="1.85" stroke-linecap="round" opacity="0.52"/>
-                  <rect x="2.5" y="2.5" width="495" height="95" rx="47.5" ry="47.5" fill="none" pathLength="100" stroke="url(#inputNeonSpark)" stroke-width="2.3" stroke-linecap="round" stroke-dasharray="28 72" opacity="0.42">
-                    <animate attributeName="stroke-dashoffset" values="0;100" dur="3.4s" repeatCount="indefinite"/>
-                  </rect>
-                </svg>
                 <div class="input-shell">
                   <div class="composer-attachments" id="composerAttachments" hidden></div>
                   <div class="composer-row">
@@ -1378,6 +1431,13 @@ data:
           var btnSidebarClose = document.getElementById("btnSidebarClose");
           var btnToggleSearch = document.getElementById("btnToggleSearch");
           var sidebarSearchPanel = document.getElementById("sidebarSearchPanel");
+          var threadFindBar = document.getElementById("threadFindBar");
+          var threadFindCount = document.getElementById("threadFindCount");
+          var threadFindPrev = document.getElementById("threadFindPrev");
+          var threadFindNext = document.getElementById("threadFindNext");
+          var threadMatchIdx = 0;
+          var threadMatchRows = [];
+          var lastQueryForFindIdx = null;
 
           var busy = false;
           var store = { version: 1, sessions: [], activeId: null };
@@ -1490,40 +1550,114 @@ data:
             threadHlTimer = setTimeout(function () {
               threadHlTimer = null;
               applyThreadSearchHighlights();
+              refreshThreadFindState();
             }, 90);
           }
 
-          function scrollToFirstSearchHit(q) {
-            if (!messagesScroll) return;
-            var needle = String(q || "").trim();
-            if (!needle) return;
-            var ln = needle.toLowerCase();
+          function getThreadPlain(row) {
+            return row._searchPlain != null
+              ? row._searchPlain
+              : row.getAttribute("data-plain") || "";
+          }
+
+          function collectThreadMatchRows() {
+            var q = (chatSearch && chatSearch.value ? chatSearch.value : "").trim();
+            var ql = q.toLowerCase();
+            var out = [];
+            if (!q) return out;
             var rows = chatEl.querySelectorAll(".msg-msg");
-            for (var j = 0; j < rows.length; j++) {
-              var row = rows[j];
+            for (var i = 0; i < rows.length; i++) {
+              var row = rows[i];
               if (row.getAttribute("data-typing") === "1") continue;
-              var plain = row._searchPlain != null
-                ? row._searchPlain
-                : row.getAttribute("data-plain") || "";
-              if (plain.toLowerCase().indexOf(ln) >= 0) {
-                row.scrollIntoView({ block: "center", behavior: "smooth" });
+              var plain = getThreadPlain(row);
+              if (plain.toLowerCase().indexOf(ql) >= 0) out.push(row);
+            }
+            return out;
+          }
+
+          function clearThreadCurrentClass() {
+            var cur = chatEl.querySelectorAll(".msg-search-current");
+            for (var c = 0; c < cur.length; c++) {
+              cur[c].classList.remove("msg-search-current");
+            }
+          }
+
+          function applyThreadCurrentClass() {
+            clearThreadCurrentClass();
+            if (!threadMatchRows.length) return;
+            var ix = threadMatchIdx;
+            if (ix < 0 || ix >= threadMatchRows.length) return;
+            threadMatchRows[ix].classList.add("msg-search-current");
+          }
+
+          function refreshThreadFindState() {
+            var q = (chatSearch && chatSearch.value ? chatSearch.value : "").trim();
+            if (q !== lastQueryForFindIdx) {
+              threadMatchIdx = 0;
+              lastQueryForFindIdx = q;
+            }
+            threadMatchRows = collectThreadMatchRows();
+            if (!threadFindBar || !threadFindCount) return;
+            if (!q) {
+              threadFindBar.hidden = true;
+              clearThreadCurrentClass();
+              threadFindCount.textContent = "0 / 0";
+              return;
+            }
+            if (!threadMatchRows.length) {
+              threadFindBar.hidden = true;
+              clearThreadCurrentClass();
+              threadFindCount.textContent = "0 / 0";
+              return;
+            }
+            if (threadMatchIdx >= threadMatchRows.length) threadMatchIdx = 0;
+            threadFindBar.hidden = false;
+            threadFindCount.textContent =
+              threadMatchIdx + 1 + " / " + threadMatchRows.length;
+            applyThreadCurrentClass();
+          }
+
+          function scrollThreadRowIntoView(row, withFlash) {
+            if (!row || !messagesScroll) return;
+            requestAnimationFrame(function () {
+              row.scrollIntoView({ block: "center", behavior: "smooth" });
+              if (withFlash) {
                 row.classList.add("msg-search-jump-flash");
                 setTimeout(function (el) {
                   return function () {
                     el.classList.remove("msg-search-jump-flash");
                   };
                 }(row), 1300);
-                return;
               }
+            });
+          }
+
+          function threadFindGo(delta) {
+            refreshThreadFindState();
+            if (!threadMatchRows.length) return;
+            threadMatchIdx =
+              (threadMatchIdx + delta + threadMatchRows.length) %
+              threadMatchRows.length;
+            if (threadFindCount) {
+              threadFindCount.textContent =
+                threadMatchIdx + 1 + " / " + threadMatchRows.length;
             }
-            scrollMessagesToEnd();
+            applyThreadCurrentClass();
+            scrollThreadRowIntoView(threadMatchRows[threadMatchIdx], true);
           }
 
           function finishThreadRenderWithSearch() {
             var q = (chatSearch && chatSearch.value ? chatSearch.value : "").trim();
             applyThreadSearchHighlights();
-            if (q) scrollToFirstSearchHit(q);
-            else scrollMessagesToEnd();
+            lastQueryForFindIdx = null;
+            refreshThreadFindState();
+            if (q && threadMatchRows.length) {
+              scrollThreadRowIntoView(threadMatchRows[threadMatchIdx], true);
+            } else if (!q) {
+              scrollMessagesToEnd();
+            } else {
+              scrollMessagesToEnd();
+            }
           }
 
           function applyBoldFromEscaped(escapedLine) {
@@ -2339,11 +2473,39 @@ data:
             scheduleThreadHighlight();
           });
           chatSearch.addEventListener("keydown", function (e) {
-            if (e.key !== "Enter") return;
-            e.preventDefault();
-            var firstBtn = sidebarList.querySelector(".sidebar-item");
-            if (firstBtn) firstBtn.click();
+            var qActive = (chatSearch.value || "").trim();
+            if (e.key === "Enter" && e.shiftKey) {
+              if (qActive) {
+                e.preventDefault();
+                refreshThreadFindState();
+                threadFindGo(-1);
+              }
+              return;
+            }
+            if (e.key === "Enter" && !e.shiftKey) {
+              if (qActive) {
+                e.preventDefault();
+                refreshThreadFindState();
+                if (threadMatchRows.length) {
+                  threadFindGo(1);
+                  return;
+                }
+              }
+              e.preventDefault();
+              var firstBtn = sidebarList.querySelector(".sidebar-item");
+              if (firstBtn) firstBtn.click();
+            }
           });
+          if (threadFindPrev) {
+            threadFindPrev.addEventListener("click", function () {
+              threadFindGo(-1);
+            });
+          }
+          if (threadFindNext) {
+            threadFindNext.addEventListener("click", function () {
+              threadFindGo(1);
+            });
+          }
 
           btnMenu.addEventListener("click", function () {
             sidebar.classList.toggle("open");
