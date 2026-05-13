@@ -196,7 +196,6 @@ data:
             min-height: 0;
             overflow-y: auto;
             padding: 4px 8px 16px;
-            scrollbar-color: rgba(50, 11, 50, 0.2) transparent;
           }
 
           .sidebar-item {
@@ -284,11 +283,37 @@ data:
           }
 
           .brand h1 {
-            font-size: 0.98rem;
-            font-weight: 630;
             margin: 0;
-            letter-spacing: -0.02em;
-            color: var(--text);
+            line-height: 1.15;
+            font-size: 1.06rem;
+            font-weight: 650;
+            letter-spacing: 0;
+          }
+
+          .brand-wordmark {
+            display: inline-block;
+            letter-spacing: 0.2em;
+            font-weight: 700;
+            font-size: 1.1em;
+            background: linear-gradient(
+              110deg,
+              #320B32 0%,
+              #9B2381 26%,
+              #D27889 50%,
+              #DC0814 72%,
+              #9B2381 92%,
+              #320B32 100%
+            );
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+          }
+
+          @supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+            .brand-wordmark {
+              color: var(--c-plum);
+              background: none;
+            }
           }
 
           .brand .subtitle {
@@ -322,7 +347,6 @@ data:
             min-height: 0;
             overflow-y: auto;
             overflow-x: hidden;
-            scrollbar-color: rgba(50, 11, 50, 0.2) transparent;
           }
 
           .messages-inner {
@@ -498,14 +522,18 @@ data:
             z-index: 1;
             display: flex;
             align-items: flex-end;
-            gap: 6px;
+            gap: 0;
             border: none;
             border-radius: 9999px;
             padding: 6px 12px 6px 18px;
             min-height: 46px;
             background: #ffffff;
             box-shadow: 0 1px 3px rgba(50, 11, 50, 0.08);
-            transition: box-shadow 0.2s ease;
+            transition: box-shadow 0.2s ease, gap 0.22s ease;
+          }
+
+          .input-shell.has-text {
+            gap: 6px;
           }
 
           .input-shell:focus-within {
@@ -538,8 +566,6 @@ data:
             padding: 8px 8px 8px 0;
             overflow-y: auto;
             overflow-x: hidden;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(50, 11, 50, 0.28) rgba(50, 11, 50, 0.06);
             font-family: var(--font-ui);
             font-size: 0.895rem;
             font-weight: 400;
@@ -549,36 +575,6 @@ data:
             color: var(--text);
           }
 
-          /* Thin track — no legacy up/down arrow buttons (Chrome / Edge / Safari) */
-          #message::-webkit-scrollbar {
-            width: 7px;
-          }
-          #message::-webkit-scrollbar-button,
-          #message::-webkit-scrollbar-button:single-button,
-          #message::-webkit-scrollbar-button:double-button,
-          #message::-webkit-scrollbar-button:start:decrement,
-          #message::-webkit-scrollbar-button:end:increment {
-            display: none;
-            width: 0;
-            height: 0;
-          }
-          #message::-webkit-scrollbar-track {
-            background: rgba(50, 11, 50, 0.06);
-            border-radius: 6px;
-            margin: 6px 0;
-          }
-          #message::-webkit-scrollbar-thumb {
-            background: rgba(155, 35, 129, 0.35);
-            border-radius: 6px;
-            border: 2px solid transparent;
-            background-clip: padding-box;
-          }
-          #message::-webkit-scrollbar-thumb:hover {
-            background: rgba(155, 35, 129, 0.5);
-            border: 2px solid transparent;
-            background-clip: padding-box;
-          }
-
           #message::placeholder {
             color: var(--muted);
             font-weight: 400;
@@ -586,37 +582,55 @@ data:
           }
 
           #sendBtn {
+            box-sizing: border-box;
             flex-shrink: 0;
-            width: 38px;
+            width: 0;
+            min-width: 0;
             height: 38px;
-            margin-right: 0;
-            margin-bottom: 0;
+            margin: 0;
+            padding: 0;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
             border: none;
-            overflow: visible;
+            overflow: hidden;
+            opacity: 0;
+            pointer-events: none;
             background: var(--c-plum);
             color: var(--c-highlight);
             box-shadow:
               0 1px 4px rgba(50, 11, 50, 0.18),
               inset 0 1px 0 rgba(234, 211, 218, 0.18);
-            transition: background 0.15s ease, transform 0.08s ease, box-shadow 0.15s ease;
+            transition:
+              width 0.22s ease,
+              min-width 0.22s ease,
+              opacity 0.2s ease,
+              background 0.15s ease,
+              transform 0.08s ease,
+              box-shadow 0.15s ease;
           }
 
-          #sendBtn:hover:not(:disabled) {
+          .input-shell.has-text #sendBtn {
+            width: 38px;
+            min-width: 38px;
+            opacity: 1;
+            pointer-events: auto;
+            overflow: visible;
+          }
+
+          .input-shell.has-text #sendBtn:hover:not(:disabled) {
             background: var(--c-purple);
             box-shadow:
               0 3px 12px rgba(155, 35, 129, 0.32),
               inset 0 1px 0 rgba(255, 255, 255, 0.18);
           }
 
-          #sendBtn:active:not(:disabled) {
+          .input-shell.has-text #sendBtn:active:not(:disabled) {
             transform: scale(0.96);
           }
 
-          #sendBtn:disabled {
+          .input-shell.has-text #sendBtn:disabled {
             opacity: 0.45;
             cursor: not-allowed;
             background: rgba(50, 11, 50, 0.35);
@@ -629,12 +643,6 @@ data:
             font-weight: 550;
             line-height: 1;
             display: block;
-            opacity: 0;
-            transition: opacity 0.16s ease;
-          }
-
-          #sendBtn.has-text .send-arrow-char {
-            opacity: 1;
           }
 
           .hint {
@@ -737,7 +745,7 @@ data:
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
               </button>
               <div class="brand">
-                <h1>KAI</h1>
+                <h1><span class="brand-wordmark">KAI</span></h1>
                 <p class="subtitle" id="headerSubtitle">Cluster read-only agent</p>
               </div>
             </div>
@@ -811,7 +819,7 @@ data:
                 </svg>
                 <div class="input-shell">
                   <textarea id="message" rows="1" placeholder="Message the cluster agent…" autocomplete="off"></textarea>
-                  <button type="button" id="sendBtn" title="Send" aria-label="Send message">
+                  <button type="button" id="sendBtn" title="Send" aria-label="Send message" aria-hidden="true" tabindex="-1">
                     <span class="send-arrow-char" aria-hidden="true">&#8593;</span>
                   </button>
                 </div>
@@ -1223,10 +1231,16 @@ data:
           }
 
           function syncSendArrow() {
+            var shell = messageInput.closest(".input-shell");
+            if (!shell) return;
             if (messageInput.value.trim().length > 0) {
-              sendBtn.classList.add("has-text");
+              shell.classList.add("has-text");
+              sendBtn.removeAttribute("aria-hidden");
+              sendBtn.setAttribute("tabindex", "0");
             } else {
-              sendBtn.classList.remove("has-text");
+              shell.classList.remove("has-text");
+              sendBtn.setAttribute("aria-hidden", "true");
+              sendBtn.setAttribute("tabindex", "-1");
             }
           }
 
