@@ -452,14 +452,7 @@ data:
             40% { transform: scale(1); opacity: 0.9; }
           }
 
-          /* Animated gradient border ring (fallback: browsers without @property get static rim) */
-          @property --aurora-ring {
-            syntax: "<angle>";
-            inherits: false;
-            initial-value: 0deg;
-          }
-
-          /* Composer & message field — animated rim is the parent's padding ring only */
+          /* Composer & message field — neon tunnel border (SVG) + white field */
           .composer {
             flex-shrink: 0;
             padding: 12px clamp(12px, 3vw, 20px)
@@ -482,29 +475,22 @@ data:
             position: relative;
             z-index: 0;
             width: 100%;
-            padding: 2px;
+            padding: 3px;
             margin: 8px 2px 10px;
             border-radius: 9999px;
             overflow: hidden;
             isolation: isolate;
-            --aurora-ring: 0deg;
-            /* Animated border colors only (no inner “light” wash) */
-            background: conic-gradient(
-              from var(--aurora-ring, 0deg),
-              var(--c-plum) 0deg,
-              var(--c-purple) 72deg,
-              var(--c-pink) 144deg,
-              var(--c-red) 216deg,
-              var(--c-purple) 288deg,
-              var(--c-plum) 360deg
-            );
-            animation: aurora-ring-rotate 32s linear infinite;
+            background: transparent;
           }
 
-          @keyframes aurora-ring-rotate {
-            to {
-              --aurora-ring: 360deg;
-            }
+          .input-neon-ring {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            display: block;
           }
 
           .input-shell {
@@ -529,9 +515,16 @@ data:
           }
 
           @media (prefers-reduced-motion: reduce) {
+            .input-neon-ring {
+              display: none;
+            }
             .input-aurora {
-              animation: none;
-              --aurora-ring: 210deg;
+              background: linear-gradient(
+                135deg,
+                var(--c-purple),
+                var(--c-pink),
+                var(--c-purple)
+              );
             }
           }
 
@@ -603,7 +596,7 @@ data:
             justify-content: center;
             border-radius: 50%;
             border: none;
-            overflow: hidden;
+            overflow: visible;
             background: var(--c-plum);
             color: var(--c-highlight);
             box-shadow:
@@ -633,9 +626,10 @@ data:
           #sendBtn svg {
             stroke: currentColor;
             fill: none;
-            width: 20px;
-            height: 20px;
+            width: 23px;
+            height: 23px;
             display: block;
+            flex-shrink: 0;
           }
 
           .hint {
@@ -757,10 +751,40 @@ data:
           <div class="composer">
             <div class="composer-inner">
               <div class="input-aurora">
+                <svg class="input-neon-ring" viewBox="0 0 500 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                  <defs>
+                    <filter id="inputNeonBlur" x="-45%" y="-45%" width="190%" height="190%">
+                      <feGaussianBlur in="SourceGraphic" stdDeviation="4.2"/>
+                    </filter>
+                    <linearGradient id="inputNeonFlow" x1="0" y1="0" x2="500" y2="0" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#320B32" stop-opacity="0.2"/>
+                      <stop offset="12%" stop-color="#9B2381" stop-opacity="0.95"/>
+                      <stop offset="28%" stop-color="#D27889"/>
+                      <stop offset="42%" stop-color="#EAD3DA" stop-opacity="0.9"/>
+                      <stop offset="55%" stop-color="#9B2381"/>
+                      <stop offset="70%" stop-color="#D27889" stop-opacity="0.85"/>
+                      <stop offset="86%" stop-color="#320B32" stop-opacity="0.35"/>
+                      <stop offset="100%" stop-color="#9B2381" stop-opacity="0.75"/>
+                      <animateTransform attributeName="gradientTransform" type="rotate" from="0 250 50" to="360 250 50" dur="20s" repeatCount="indefinite"/>
+                    </linearGradient>
+                    <linearGradient id="inputNeonFlowB" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#D27889" stop-opacity="0.5"/>
+                      <stop offset="50%" stop-color="#9B2381" stop-opacity="0.35"/>
+                      <stop offset="100%" stop-color="#EAD3DA" stop-opacity="0.55"/>
+                      <animateTransform attributeName="gradientTransform" type="rotate" from="360 250 50" to="0 250 50" dur="14s" repeatCount="indefinite"/>
+                    </linearGradient>
+                  </defs>
+                  <rect x="2.5" y="2.5" width="495" height="95" rx="47.5" ry="47.5" fill="none" pathLength="100" stroke="url(#inputNeonFlowB)" stroke-width="8" stroke-linecap="round" stroke-dasharray="24 76" opacity="0.42" filter="url(#inputNeonBlur)">
+                    <animate attributeName="stroke-dashoffset" values="0;-100" dur="22s" repeatCount="indefinite"/>
+                  </rect>
+                  <rect x="2.5" y="2.5" width="495" height="95" rx="47.5" ry="47.5" fill="none" pathLength="100" stroke="url(#inputNeonFlow)" stroke-width="2.35" stroke-linecap="round" stroke-dasharray="20 80">
+                    <animate attributeName="stroke-dashoffset" values="0;100" dur="9.5s" repeatCount="indefinite"/>
+                  </rect>
+                </svg>
                 <div class="input-shell">
                   <textarea id="message" rows="1" placeholder="Message the cluster agent…" autocomplete="off"></textarea>
                   <button type="button" id="sendBtn" title="Send" aria-label="Send message">
-                    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 18.5V14"/><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M7.5 14 12 8.5 16.5 14"/></svg>
+                    <svg viewBox="-1.5 -1.25 27 26.5" overflow="visible" aria-hidden="true" fill="none"><path stroke="currentColor" stroke-width="2.45" stroke-linecap="round" stroke-linejoin="round" d="M12 21.5V12.85"/><path stroke="currentColor" stroke-width="2.45" stroke-linecap="round" stroke-linejoin="round" d="M6.62 12.85 12 4.85 17.38 12.85"/></svg>
                   </button>
                 </div>
               </div>
