@@ -47,6 +47,12 @@ data:
             /* Shared column width with composer pill (answers match input shell) */
             --chat-col-max: min(600px, 94vw);
             --chat-col-pad-x: clamp(12px, 3vw, 20px);
+            /* Assistant bubbles + composer pill body + strip above pill */
+            --bubble-surface: #ffffff;
+            /* Narrower than full column (~pill corner radius inset) */
+            --assistant-msg-inset-total: 22px;
+            /* Breathable strip so input-shell upper border reads clearly */
+            --composer-strip-h: 14px;
             --danger-bg: rgba(220, 8, 20, 0.1);
             --danger-text: #9a0610;
             --danger-br: rgba(220, 8, 20, 0.35);
@@ -389,8 +395,11 @@ data:
 
           .msg-msg.user { align-self: flex-end; max-width: min(560px, 92%); }
           .msg-msg.assistant {
-            align-self: stretch;
-            max-width: 100%;
+            align-self: center;
+            width: calc(100% - var(--assistant-msg-inset-total));
+            max-width: calc(
+              100% - var(--assistant-msg-inset-total)
+            );
           }
 
           .bubble-shell { width: 100%; }
@@ -415,7 +424,7 @@ data:
           }
 
           .msg-msg.assistant .bubble {
-            background: #ffffff;
+            background: var(--bubble-surface);
             border-color: var(--border-hair);
             box-shadow: 0 1px 2px rgba(50, 11, 50, 0.04);
           }
@@ -505,11 +514,7 @@ data:
             padding: 0 var(--chat-col-pad-x)
               calc(12px + env(safe-area-inset-bottom));
             border-top: 1px solid var(--border-hair);
-            background: linear-gradient(
-              180deg,
-              rgba(255, 255, 255, 0.88) 0%,
-              var(--c-bg) 100%
-            );
+            background: var(--bg-main);
           }
 
           .composer-inner {
@@ -520,6 +525,17 @@ data:
             overflow: visible;
             position: relative;
             z-index: 28;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+          }
+
+          /* Same surface as message bubbles — highlights input-shell border */
+          .composer-inner::before {
+            content: "";
+            flex: 0 0 auto;
+            height: var(--composer-strip-h);
+            background: var(--bubble-surface);
           }
 
           /* Composer: light, even border (no heavy gradient ring) */
@@ -549,7 +565,7 @@ data:
             border-radius: 22px;
             padding: 6px 8px;
             min-height: 48px;
-            background: #ffffff;
+            background: var(--bubble-surface);
             box-shadow:
               0 0 0 1px rgba(255, 255, 255, 0.65) inset,
               0 1px 2px rgba(50, 11, 50, 0.04),
