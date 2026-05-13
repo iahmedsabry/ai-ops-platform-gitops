@@ -11,7 +11,7 @@ data:
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="theme-color" content="#07090e">
+        <meta name="theme-color" content="#320B32">
 
         <base href="/k8s-ops-chat/">
 
@@ -23,22 +23,30 @@ data:
 
         <style>
           :root {
-            color-scheme: dark;
-            --bg-main: #121212;
-            --bg-sidebar: #1a1a1a;
-            --bg-input: #1e1e1e;
-            --bg-input-top: #262a33;
-            --bg-input-bottom: #1c1f27;
-            --input-border: rgba(255,255,255,.1);
-            --input-ring: rgba(99, 140, 248, 0.22);
-            --border-hair: rgba(255,255,255,.06);
-            --text: #ececec;
-            --text-dim: #b9bcc4;
-            --muted: #8b909a;
+            color-scheme: light;
+            /* Brand */
+            --c-red: #DC0814;
+            --c-pink: #D27889;
+            --c-purple: #9B2381;
+            --c-plum: #320B32;
+            --c-highlight: #EAD3DA;
+            --c-bg: #F2F2F2;
+
+            --bg-main: var(--c-bg);
+            --bg-sidebar: #ffffff;
+            --bg-input: #ffffff;
+            --bg-input-top: #faf8f9;
+            --bg-input-bottom: var(--c-highlight);
+            --input-border: rgba(50, 11, 50, 0.14);
+            --input-ring: rgba(155, 35, 129, 0.28);
+            --border-hair: rgba(50, 11, 50, 0.09);
+            --text: var(--c-plum);
+            --text-dim: rgba(50, 11, 50, 0.78);
+            --muted: rgba(50, 11, 50, 0.52);
             --sidebar-w: 280px;
-            --danger-bg: rgba(120,30,30,.38);
-            --danger-text: #fecaca;
-            --danger-br: rgba(251,113,133,.32);
+            --danger-bg: rgba(220, 8, 20, 0.1);
+            --danger-text: #9a0610;
+            --danger-br: rgba(220, 8, 20, 0.35);
             --font-ui: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             font-family: var(--font-ui);
             font-feature-settings: "cv02", "cv11", "ss01";
@@ -81,7 +89,7 @@ data:
 
           .icon-plain:hover {
             opacity: 1;
-            background: rgba(255,255,255,.05);
+            background: rgba(210, 120, 137, 0.12);
           }
 
           .icon-plain svg {
@@ -159,14 +167,15 @@ data:
             padding: 9px 12px;
             border-radius: 8px;
             border: 1px solid var(--border-hair);
-            background: rgba(0,0,0,.25);
+            background: var(--c-bg);
             color: var(--text);
             font-size: 0.84rem;
             outline: none;
           }
 
           #chatSearch:focus {
-            border-color: rgba(255,255,255,.12);
+            border-color: var(--c-purple);
+            box-shadow: 0 0 0 2px rgba(155, 35, 129, 0.2);
           }
 
           #chatSearch::placeholder {
@@ -187,7 +196,7 @@ data:
             min-height: 0;
             overflow-y: auto;
             padding: 4px 8px 16px;
-            scrollbar-color: rgba(255,255,255,.12) transparent;
+            scrollbar-color: rgba(50, 11, 50, 0.2) transparent;
           }
 
           .sidebar-item {
@@ -208,8 +217,9 @@ data:
           }
 
           .sidebar-item.active {
-            color: var(--text);
+            color: var(--c-purple);
             font-weight: 550;
+            background: rgba(234, 211, 218, 0.45);
           }
 
           .sidebar-item-title {
@@ -270,7 +280,7 @@ data:
           }
 
           #btnMenu:hover {
-            background: rgba(255,255,255,.06);
+            background: rgba(210, 120, 137, 0.14);
           }
 
           .brand h1 {
@@ -303,7 +313,8 @@ data:
           }
 
           .model-pill .model-id {
-            color: var(--text-dim);
+            color: var(--c-purple);
+            font-weight: 600;
           }
 
           .messages-scroll {
@@ -311,7 +322,7 @@ data:
             min-height: 0;
             overflow-y: auto;
             overflow-x: hidden;
-            scrollbar-color: rgba(255,255,255,.12) transparent;
+            scrollbar-color: rgba(50, 11, 50, 0.2) transparent;
           }
 
           .messages-inner {
@@ -351,13 +362,19 @@ data:
           }
 
           .msg-msg.user .bubble {
-            background: rgba(255,255,255,.06);
-            border-color: rgba(255,255,255,.08);
+            background: linear-gradient(
+              145deg,
+              rgba(234, 211, 218, 0.85) 0%,
+              rgba(255, 255, 255, 0.95) 100%
+            );
+            border-color: rgba(155, 35, 129, 0.22);
             white-space: pre-wrap;
           }
 
           .msg-msg.assistant .bubble {
-            background: rgba(255,255,255,.04);
+            background: #ffffff;
+            border-color: var(--border-hair);
+            box-shadow: 0 1px 2px rgba(50, 11, 50, 0.04);
           }
 
           .bubble.error {
@@ -370,13 +387,14 @@ data:
             margin: 0 0 0.4em;
             font-size: 1.02rem;
             font-weight: 650;
+            color: var(--c-plum);
           }
 
           .bubble.prose h4.md-heading {
             margin: 0.85em 0 0.35em;
             font-size: 0.9rem;
             font-weight: 640;
-            color: #c8cdd5;
+            color: var(--c-purple);
           }
 
           .bubble.prose h3.md-heading:first-child,
@@ -394,7 +412,7 @@ data:
             margin: 0.22em 0;
             padding-left: 1rem;
             position: relative;
-            color: #d5d9e0;
+            color: var(--text-dim);
           }
 
           .bubble.prose p.md-li::before {
@@ -405,10 +423,11 @@ data:
             width: 4px;
             height: 4px;
             border-radius: 50%;
-            background: rgba(255,255,255,.45);
+            background: var(--c-pink);
+            opacity: 0.75;
           }
 
-          .bubble.prose strong { font-weight: 650; color: #fff; }
+          .bubble.prose strong { font-weight: 650; color: var(--c-plum); }
           .bubble.prose .md-gap { height: 0.5em; }
 
           .typing-dot {
@@ -421,7 +440,7 @@ data:
             width: 6px;
             height: 6px;
             border-radius: 50%;
-            background: var(--muted);
+            background: var(--c-pink);
             animation: bounce 1.15s infinite ease-in-out;
           }
 
@@ -440,7 +459,7 @@ data:
             initial-value: 0deg;
           }
 
-          /* Composer */
+          /* Composer & message field — animated rim is the parent's padding ring only */
           .composer {
             flex-shrink: 0;
             padding: 12px clamp(12px, 3vw, 20px)
@@ -448,8 +467,8 @@ data:
             border-top: 1px solid var(--border-hair);
             background: linear-gradient(
               180deg,
-              rgba(18,18,18,.92) 0%,
-              var(--bg-main) 100%
+              rgba(255, 255, 255, 0.88) 0%,
+              var(--c-bg) 100%
             );
           }
 
@@ -459,90 +478,30 @@ data:
             overflow: visible;
           }
 
-          /* Blurred aurora fill (clipped inside pill) + glass pill; rotating border spotlight */
           .input-aurora {
             position: relative;
             z-index: 0;
             width: 100%;
-            padding: 2px;
+            padding: 3px;
             margin: 8px 2px 10px;
             border-radius: 9999px;
             overflow: hidden;
             isolation: isolate;
-          }
-
-          .input-aurora::before,
-          .input-aurora::after {
-            content: "";
-            position: absolute;
-            pointer-events: none;
-            border-radius: inherit;
-            z-index: 0;
-          }
-
-          .input-aurora::before {
-            inset: 0;
-            background:
-              radial-gradient(
-                ellipse 85% 70% at 28% 42%,
-                rgba(99, 102, 241, 0.5) 0%,
-                rgba(124, 58, 237, 0.26) 38%,
-                transparent 72%
-              ),
-              radial-gradient(
-                ellipse 75% 80% at 72% 58%,
-                rgba(59, 130, 246, 0.34) 0%,
-                rgba(139, 92, 246, 0.22) 45%,
-                transparent 74%
-              );
-            filter: blur(18px);
-            opacity: 0.76;
-            will-change: transform, opacity;
-            animation: aurora-drift-a 36s ease-in-out infinite;
-          }
-
-          .input-aurora::after {
-            inset: 0;
-            background:
-              radial-gradient(
-                ellipse 60% 55% at 65% 35%,
-                rgba(167, 139, 250, 0.4) 0%,
-                transparent 62%
-              ),
-              radial-gradient(
-                ellipse 70% 65% at 38% 68%,
-                rgba(56, 189, 248, 0.24) 0%,
-                transparent 66%
-              );
-            filter: blur(14px);
-            opacity: 0.42;
-            animation: aurora-drift-b 44s ease-in-out infinite;
-          }
-
-          @keyframes aurora-drift-a {
-            0%, 100% {
-              transform: translate(-1.5%, 0.8%) scale(1);
-              opacity: 0.68;
-            }
-            33% {
-              transform: translate(2.5%, -1.5%) scale(1.02);
-              opacity: 0.82;
-            }
-            66% {
-              transform: translate(1.2%, 2%) scale(0.99);
-              opacity: 0.74;
-            }
-          }
-
-          @keyframes aurora-drift-b {
-            0%, 100% {
-              transform: translate(1.5%, -0.8%) rotate(-1.5deg);
-              opacity: 0.36;
-            }
-            50% {
-              transform: translate(-2.5%, 1.5%) rotate(1.5deg);
-              opacity: 0.48;
-            }
+            --aurora-ring: 0deg;
+            background: conic-gradient(
+              from var(--aurora-ring, 0deg),
+              var(--c-plum) 0deg,
+              var(--c-purple) 48deg,
+              var(--c-pink) 96deg,
+              var(--c-highlight) 128deg,
+              #ffffff 150deg,
+              var(--c-red) 182deg,
+              var(--c-pink) 228deg,
+              var(--c-purple) 276deg,
+              var(--c-plum) 320deg,
+              var(--c-plum) 360deg
+            );
+            animation: aurora-ring-rotate 22s linear infinite;
           }
 
           @keyframes aurora-ring-rotate {
@@ -557,63 +516,38 @@ data:
             display: flex;
             align-items: flex-end;
             gap: 6px;
-            --aurora-ring: 0deg;
-            border: 2px solid transparent;
+            border: none;
             border-radius: 9999px;
             padding: 6px 12px 6px 18px;
             min-height: 46px;
-            -webkit-backdrop-filter: blur(16px) saturate(1.2);
-            backdrop-filter: blur(16px) saturate(1.2);
+            -webkit-backdrop-filter: blur(10px) saturate(1.05);
+            backdrop-filter: blur(10px) saturate(1.05);
             background:
               linear-gradient(
-                175deg,
-                rgba(24, 26, 36, 0.78) 0%,
-                rgba(18, 20, 30, 0.82) 100%
-              )
-              padding-box,
-              conic-gradient(
-                from var(--aurora-ring, 0deg),
-                rgba(99, 102, 241, 0.2) 0deg,
-                rgba(124, 58, 237, 0.24) 90deg,
-                rgba(167, 139, 250, 0.5) 140deg,
-                rgba(216, 220, 255, 0.72) 168deg,
-                rgba(180, 198, 255, 0.55) 180deg,
-                rgba(147, 197, 253, 0.38) 210deg,
-                rgba(139, 92, 246, 0.22) 280deg,
-                rgba(99, 102, 241, 0.2) 360deg
-              )
-              border-box;
-            background-clip: padding-box, border-box;
-            animation: aurora-ring-rotate 28s linear infinite;
+                178deg,
+                #ffffff 0%,
+                rgba(234, 211, 218, 0.42) 100%
+              );
             box-shadow:
-              inset 0 1px 0 rgba(255, 255, 255, 0.11),
-              inset 0 -1px 0 rgba(0, 0, 0, 0.16),
-              inset 0 0 28px rgba(99, 102, 241, 0.1),
-              0 0 0 1px rgba(255, 255, 255, 0.06),
-              0 6px 28px rgba(0, 0, 0, 0.34);
-            transition: box-shadow 0.28s ease, filter 0.28s ease, background 0.28s ease;
+              inset 0 1px 0 rgba(255, 255, 255, 0.95),
+              inset 0 0 0 1px rgba(255, 255, 255, 0.5),
+              inset 0 -1px 0 rgba(50, 11, 50, 0.06),
+              0 4px 18px rgba(50, 11, 50, 0.08);
+            transition: box-shadow 0.28s ease;
           }
 
           .input-shell:focus-within {
             box-shadow:
-              inset 0 1px 0 rgba(255, 255, 255, 0.14),
-              inset 0 -1px 0 rgba(0, 0, 0, 0.18),
-              inset 0 0 34px rgba(129, 140, 248, 0.14),
-              0 0 0 1px rgba(165, 180, 252, 0.18),
-              0 8px 32px rgba(0, 0, 0, 0.4);
+              inset 0 1px 0 rgba(255, 255, 255, 0.98),
+              inset 0 0 0 1px rgba(155, 35, 129, 0.18),
+              inset 0 -1px 0 rgba(50, 11, 50, 0.06),
+              0 6px 22px rgba(155, 35, 129, 0.12);
           }
 
           @media (prefers-reduced-motion: reduce) {
-            .input-aurora::before,
-            .input-aurora::after {
+            .input-aurora {
               animation: none;
-              transform: none;
-            }
-            .input-aurora::before { opacity: 0.6; }
-            .input-aurora::after { opacity: 0.32; }
-            .input-shell {
-              animation: none;
-              --aurora-ring: 200deg;
+              --aurora-ring: 210deg;
             }
           }
 
@@ -628,7 +562,7 @@ data:
             overflow-y: auto;
             overflow-x: hidden;
             scrollbar-width: thin;
-            scrollbar-color: rgba(255, 255, 255, 0.26) rgba(255, 255, 255, 0.06);
+            scrollbar-color: rgba(50, 11, 50, 0.28) rgba(50, 11, 50, 0.06);
             font-family: var(--font-ui);
             font-size: 0.895rem;
             font-weight: 400;
@@ -652,18 +586,18 @@ data:
             height: 0;
           }
           #message::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(50, 11, 50, 0.06);
             border-radius: 6px;
             margin: 6px 0;
           }
           #message::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.24);
+            background: rgba(155, 35, 129, 0.35);
             border-radius: 6px;
             border: 2px solid transparent;
             background-clip: padding-box;
           }
           #message::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.34);
+            background: rgba(155, 35, 129, 0.5);
             border: 2px solid transparent;
             background-clip: padding-box;
           }
@@ -676,28 +610,29 @@ data:
 
           #sendBtn {
             flex-shrink: 0;
-            width: 34px;
-            height: 34px;
-            margin-right: 1px;
-            margin-bottom: 1px;
+            width: 40px;
+            height: 40px;
+            margin-right: 0;
+            margin-bottom: 0;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
             border: none;
-            background: #dedee3;
-            color: #0a0a0a;
+            overflow: visible;
+            background: var(--c-plum);
+            color: var(--c-highlight);
             box-shadow:
-              0 1px 2px rgba(0,0,0,.12),
-              inset 0 1px 0 rgba(255,255,255,.55);
+              0 2px 8px rgba(50, 11, 50, 0.2),
+              inset 0 1px 0 rgba(234, 211, 218, 0.22);
             transition: background 0.15s ease, transform 0.08s ease, box-shadow 0.15s ease;
           }
 
           #sendBtn:hover:not(:disabled) {
-            background: #e8e8ec;
+            background: var(--c-purple);
             box-shadow:
-              0 2px 8px rgba(0,0,0,.14),
-              inset 0 1px 0 rgba(255,255,255,.65);
+              0 3px 12px rgba(155, 35, 129, 0.32),
+              inset 0 1px 0 rgba(255, 255, 255, 0.18);
           }
 
           #sendBtn:active:not(:disabled) {
@@ -705,14 +640,17 @@ data:
           }
 
           #sendBtn:disabled {
-            opacity: 0.4;
+            opacity: 0.45;
             cursor: not-allowed;
-            background: #e5e5e5;
+            background: rgba(50, 11, 50, 0.35);
+            color: rgba(234, 211, 218, 0.65);
           }
 
           #sendBtn svg {
             stroke: currentColor;
             fill: none;
+            overflow: visible;
+            display: block;
           }
 
           .hint {
@@ -736,7 +674,7 @@ data:
             font-size: 1.35rem;
             font-weight: 650;
             letter-spacing: -0.03em;
-            color: var(--text);
+            color: var(--c-purple);
             margin: 0 0 10px;
           }
 
@@ -750,7 +688,7 @@ data:
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,.52);
+            background: rgba(50, 11, 50, 0.35);
             z-index: 25;
           }
 
@@ -773,7 +711,7 @@ data:
               top: 0;
               bottom: 0;
               transform: translateX(-102%);
-              box-shadow: 8px 0 32px rgba(0,0,0,.4);
+              box-shadow: 8px 0 28px rgba(50, 11, 50, 0.18);
             }
             .sidebar.open { transform: translateX(0); }
             .model-pill { display: none; }
@@ -837,13 +775,13 @@ data:
                 <div class="input-shell">
                   <textarea id="message" rows="1" placeholder="Message the cluster agent…" autocomplete="off"></textarea>
                   <button type="button" id="sendBtn" title="Send" aria-label="Send message">
-                    <svg width="32" height="32" viewBox="0 0 24 24" aria-hidden="true" fill="none">
+                    <svg width="36" height="36" viewBox="-1.25 -0.75 26.5 25.5" overflow="visible" aria-hidden="true" fill="none">
                       <path
                         stroke="currentColor"
-                        stroke-width="2.25"
+                        stroke-width="3.2"
                         stroke-linecap="round"
                         stroke-linejoin="round"
-                        d="M12 19.85L12 12.08M7.28 12.08L12 4.55L16.72 12.08"/>
+                        d="M12 21.4V11.85M6.45 11.85L12 2.5L17.55 11.85"/>
                     </svg>
                   </button>
                 </div>
@@ -1050,7 +988,7 @@ data:
                 : "");
 
             headerSubtitle.innerHTML =
-              'Powered by <code style="font-size:inherit;color:rgba(154,174,216,.92)">' +
+              'Powered by <code style="font-size:inherit;color:#9B2381">' +
               escapeHtml(modelLabel) +
               "</code> · read-only cluster tools";
           }
