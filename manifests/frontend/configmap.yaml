@@ -520,20 +520,14 @@ data:
           .input-shell {
             position: relative;
             z-index: 1;
-            display: flex;
-            align-items: flex-end;
-            gap: 0;
+            display: block;
             border: none;
             border-radius: 9999px;
-            padding: 6px 12px 6px 18px;
+            padding: 6px 10px;
             min-height: 46px;
             background: #ffffff;
             box-shadow: 0 1px 3px rgba(50, 11, 50, 0.08);
-            transition: box-shadow 0.2s ease, gap 0.22s ease;
-          }
-
-          .input-shell.has-text {
-            gap: 6px;
+            transition: box-shadow 0.2s ease;
           }
 
           .input-shell:focus-within {
@@ -542,7 +536,101 @@ data:
               0 2px 8px rgba(50, 11, 50, 0.08);
           }
 
+          /* Textarea + anchored attach (bottom-left) and send (bottom-right) */
+          .composer-field-wrap {
+            position: relative;
+            width: 100%;
+            min-height: 42px;
+          }
+
+          .composer-file-input {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+            opacity: 0;
+          }
+
+          .attach-btn {
+            position: absolute;
+            left: 4px;
+            bottom: 5px;
+            z-index: 3;
+            box-sizing: border-box;
+            width: 36px;
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            background: rgba(155, 35, 129, 0.06);
+            color: var(--c-purple);
+            transition:
+              background 0.2s ease,
+              box-shadow 0.22s ease,
+              transform 0.15s ease,
+              color 0.15s ease;
+          }
+
+          .attach-btn:hover {
+            background: rgba(210, 120, 137, 0.18);
+            color: var(--c-plum);
+            box-shadow:
+              0 0 0 1px rgba(155, 35, 129, 0.2),
+              0 0 22px rgba(155, 35, 129, 0.2),
+              0 0 36px rgba(210, 120, 137, 0.14);
+          }
+
+          .attach-btn:active {
+            transform: scale(0.94);
+          }
+
+          .attach-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            fill: none;
+            display: block;
+            pointer-events: none;
+          }
+
+          .attach-btn .attach-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            min-width: 16px;
+            height: 16px;
+            padding: 0 4px;
+            border-radius: 999px;
+            font-size: 0.62rem;
+            font-weight: 700;
+            line-height: 16px;
+            text-align: center;
+            color: #fff;
+            background: linear-gradient(135deg, var(--c-purple), var(--c-pink));
+            box-shadow: 0 1px 4px rgba(50, 11, 50, 0.25);
+            pointer-events: none;
+          }
+
+          .attach-btn .attach-badge[hidden] {
+            display: none !important;
+          }
+
+          .attach-btn.has-files {
+            background: rgba(210, 120, 137, 0.14);
+          }
+
           @media (prefers-reduced-motion: reduce) {
+            .attach-btn:hover {
+              box-shadow: none;
+            }
             .input-neon-ring {
               display: none;
             }
@@ -558,14 +646,17 @@ data:
 
           #message {
             box-sizing: border-box;
-            flex: 1;
+            display: block;
+            width: 100%;
+            margin: 0;
             border: none;
             outline: none;
             resize: none;
             min-height: 36px;
             max-height: 200px;
             height: 36px;
-            padding: 8px 8px 8px 0;
+            /* Reserve space for attach (left) + send (right); no layout shift when send appears */
+            padding: 9px 52px 9px 46px;
             overflow-x: hidden;
             overflow-y: hidden;
             font-family: var(--font-ui);
@@ -622,11 +713,14 @@ data:
             opacity: 0.92;
           }
 
+          /* Fixed bottom-right; reserve horizontal space via textarea padding — no vertical jump */
           #sendBtn {
             box-sizing: border-box;
-            flex-shrink: 0;
-            width: 0;
-            min-width: 0;
+            position: absolute;
+            right: 5px;
+            bottom: 5px;
+            z-index: 3;
+            width: 38px;
             height: 38px;
             margin: 0;
             padding: 0;
@@ -637,6 +731,8 @@ data:
             border: none;
             overflow: hidden;
             opacity: 0;
+            visibility: hidden;
+            transform: scale(0.92);
             pointer-events: none;
             background: var(--c-plum);
             color: var(--c-highlight);
@@ -644,18 +740,17 @@ data:
               0 1px 4px rgba(50, 11, 50, 0.18),
               inset 0 1px 0 rgba(234, 211, 218, 0.18);
             transition:
-              width 0.22s ease,
-              min-width 0.22s ease,
               opacity 0.2s ease,
+              visibility 0.2s ease,
+              transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94),
               background 0.15s ease,
-              transform 0.08s ease,
               box-shadow 0.15s ease;
           }
 
           .input-shell.has-text #sendBtn {
-            width: 38px;
-            min-width: 38px;
             opacity: 1;
+            visibility: visible;
+            transform: scale(1);
             pointer-events: auto;
             overflow: visible;
           }
@@ -663,7 +758,9 @@ data:
           .input-shell.has-text #sendBtn:hover:not(:disabled) {
             background: var(--c-purple);
             box-shadow:
-              0 3px 12px rgba(155, 35, 129, 0.32),
+              0 0 0 1px rgba(210, 120, 137, 0.3),
+              0 3px 14px rgba(155, 35, 129, 0.35),
+              0 0 24px rgba(210, 120, 137, 0.22),
               inset 0 1px 0 rgba(255, 255, 255, 0.18);
           }
 
@@ -859,13 +956,20 @@ data:
                   </rect>
                 </svg>
                 <div class="input-shell">
-                  <textarea id="message" rows="1" placeholder="Message the cluster agent…" autocomplete="off"></textarea>
-                  <button type="button" id="sendBtn" title="Send" aria-label="Send message" aria-hidden="true" tabindex="-1">
-                    <span class="send-arrow-char" aria-hidden="true">&#8593;</span>
-                  </button>
+                  <div class="composer-field-wrap">
+                    <textarea id="message" rows="1" placeholder="Message the cluster agent…" autocomplete="off"></textarea>
+                    <input type="file" id="attachmentInput" class="composer-file-input" multiple tabindex="-1" aria-hidden="true" accept="image/*,.pdf,.txt,.md,.yaml,.yml,.json,.csv,.png,.jpg,.jpeg,.gif,.webp,.svg,application/pdf,*/*"/>
+                    <button type="button" class="attach-btn" id="attachBtn" title="Attach files or images (Shift+click to clear)" aria-label="Attach files or images">
+                      <span class="attach-badge" id="attachBadge" hidden aria-hidden="true">0</span>
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+                    </button>
+                    <button type="button" id="sendBtn" title="Send" aria-label="Send message" aria-hidden="true" tabindex="-1">
+                      <span class="send-arrow-char" aria-hidden="true">&#8593;</span>
+                    </button>
+                  </div>
                 </div>
               </div>
-              <p class="hint">Enter to send · Shift+Enter for a new line</p>
+              <p class="hint">Enter to send · Shift+Enter for new line · paperclip to attach · Shift+click clip to clear</p>
             </div>
           </div>
         </div>
@@ -878,6 +982,9 @@ data:
           var messagesScroll = document.getElementById("messagesScroll");
           var messageInput = document.getElementById("message");
           var sendBtn = document.getElementById("sendBtn");
+          var attachmentInput = document.getElementById("attachmentInput");
+          var attachBtn = document.getElementById("attachBtn");
+          var attachBadge = document.getElementById("attachBadge");
           var emptyState = document.getElementById("emptyState");
           var sidebarList = document.getElementById("sidebarList");
           var chatSearch = document.getElementById("chatSearch");
@@ -895,6 +1002,7 @@ data:
           var store = { version: 1, sessions: [], activeId: null };
           var modelLabel = "gemini";
           var apiBaseDisplay = "";
+          var selectedFiles = [];
 
           function escapeHtml(text) {
             var d = document.createElement("div");
@@ -1265,6 +1373,24 @@ data:
             if (row && row.parentNode) row.parentNode.removeChild(row);
           }
 
+          function syncAttachmentUi() {
+            var n = selectedFiles.length;
+            if (!attachBadge) return;
+            if (n < 1) {
+              attachBadge.setAttribute("hidden", "hidden");
+              if (attachBtn) attachBtn.classList.remove("has-files");
+              return;
+            }
+            attachBadge.removeAttribute("hidden");
+            attachBadge.textContent = n > 9 ? "9+" : String(n);
+            if (attachBtn) attachBtn.classList.add("has-files");
+          }
+
+          function clearAttachments() {
+            selectedFiles = [];
+            syncAttachmentUi();
+          }
+
           var TA_MIN_H = 36;
           var TA_MAX_H = 200;
 
@@ -1284,7 +1410,9 @@ data:
           function syncSendArrow() {
             var shell = messageInput.closest(".input-shell");
             if (!shell) return;
-            if (messageInput.value.trim().length > 0) {
+            var showSend =
+              messageInput.value.trim().length > 0 || selectedFiles.length > 0;
+            if (showSend) {
               shell.classList.add("has-text");
               sendBtn.removeAttribute("aria-hidden");
               sendBtn.setAttribute("tabindex", "0");
@@ -1339,15 +1467,34 @@ data:
 
           async function sendMessage() {
             var message = messageInput.value;
-            if (!message.trim() || busy) return;
+            if (
+              (!message.trim() && selectedFiles.length === 0) ||
+              busy
+            ) {
+              return;
+            }
+
+            var names = [];
+            var i;
+            for (i = 0; i < selectedFiles.length; i++) {
+              names.push(selectedFiles[i].name);
+            }
+            var attachHeader =
+              names.length > 0
+                ? "[Attached file(s): " +
+                  names.join(", ") +
+                  "]\n\n"
+                : "";
+            var outbound = attachHeader + message;
 
             busy = true;
             sendBtn.disabled = true;
 
             ensureDraftSession();
-            appendToStore("user", message, false);
-            appendMessageRowDom("user", message, false);
+            appendToStore("user", outbound, false);
+            appendMessageRowDom("user", outbound, false);
             messageInput.value = "";
+            clearAttachments();
             autoResize();
             syncSendArrow();
 
@@ -1357,7 +1504,7 @@ data:
               var response = await fetch("/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: message }),
+                body: JSON.stringify({ message: outbound }),
               });
 
               var data;
@@ -1403,6 +1550,30 @@ data:
 
           sendBtn.addEventListener("click", sendMessage);
 
+          if (attachBtn && attachmentInput) {
+            attachBtn.addEventListener("click", function (e) {
+              if (e.shiftKey && selectedFiles.length) {
+                e.preventDefault();
+                clearAttachments();
+                syncSendArrow();
+                return;
+              }
+              e.preventDefault();
+              attachmentInput.click();
+            });
+
+            attachmentInput.addEventListener("change", function () {
+              var files = attachmentInput.files;
+              if (!files || !files.length) return;
+              for (var fi = 0; fi < files.length; fi++) {
+                selectedFiles.push(files[fi]);
+              }
+              attachmentInput.value = "";
+              syncAttachmentUi();
+              syncSendArrow();
+            });
+          }
+
           messageInput.addEventListener("keydown", function (e) {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();
@@ -1443,6 +1614,7 @@ data:
           renderSidebarList();
           renderThread();
           fetchModelMeta();
+          syncAttachmentUi();
           syncSendArrow();
           autoResize();
           messageInput.focus();
