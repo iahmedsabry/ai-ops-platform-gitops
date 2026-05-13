@@ -44,6 +44,9 @@ data:
             --text-dim: rgba(50, 11, 50, 0.78);
             --muted: rgba(50, 11, 50, 0.52);
             --sidebar-w: 280px;
+            /* Shared column width with composer pill (answers match input shell) */
+            --chat-col-max: min(600px, 94vw);
+            --chat-col-pad-x: clamp(12px, 3vw, 20px);
             --danger-bg: rgba(220, 8, 20, 0.1);
             --danger-text: #9a0610;
             --danger-br: rgba(220, 8, 20, 0.35);
@@ -358,14 +361,16 @@ data:
             min-height: 0;
             overflow-y: auto;
             overflow-x: hidden;
+            padding-left: var(--chat-col-pad-x);
+            padding-right: var(--chat-col-pad-x);
           }
 
           .messages-inner {
-            max-width: min(600px, 94vw);
+            max-width: var(--chat-col-max);
             margin: 0 auto;
-            padding: clamp(12px, 2vw, 20px)
-              clamp(14px, 3vw, 28px)
-              18px;
+            /* Horizontal inset lives on .messages-scroll + shared --chat-col-pad-x
+               so assistant width matches composer-inner pill */
+            padding: clamp(12px, 2vw, 20px) 0 12px;
             display: flex;
             flex-direction: column;
             gap: 14px;
@@ -383,7 +388,10 @@ data:
           }
 
           .msg-msg.user { align-self: flex-end; max-width: min(560px, 92%); }
-          .msg-msg.assistant { align-self: flex-start; max-width: min(720px, 96%); }
+          .msg-msg.assistant {
+            align-self: stretch;
+            max-width: 100%;
+          }
 
           .bubble-shell { width: 100%; }
 
@@ -494,7 +502,7 @@ data:
             min-width: 0;
             position: relative;
             z-index: 24;
-            padding: 12px clamp(12px, 3vw, 20px)
+            padding: 0 var(--chat-col-pad-x)
               calc(12px + env(safe-area-inset-bottom));
             border-top: 1px solid var(--border-hair);
             background: linear-gradient(
@@ -505,7 +513,7 @@ data:
           }
 
           .composer-inner {
-            max-width: min(600px, 94vw);
+            max-width: var(--chat-col-max);
             width: 100%;
             min-width: 0;
             margin: 0 auto;
@@ -522,7 +530,7 @@ data:
             min-width: 0;
             box-sizing: border-box;
             padding: 0;
-            margin: 8px 0;
+            margin: 0 0 6px;
             border-radius: 22px;
             isolation: isolate;
             overflow: visible;
