@@ -587,10 +587,10 @@ data:
 
           #sendBtn {
             flex-shrink: 0;
-            width: 34px;
-            height: 34px;
-            margin-right: 1px;
-            margin-bottom: 1px;
+            width: 38px;
+            height: 38px;
+            margin-right: 0;
+            margin-bottom: 0;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -626,8 +626,8 @@ data:
           #sendBtn svg {
             stroke: currentColor;
             fill: none;
-            width: 23px;
-            height: 23px;
+            width: 26px;
+            height: 26px;
             display: block;
             flex-shrink: 0;
           }
@@ -753,38 +753,61 @@ data:
               <div class="input-aurora">
                 <svg class="input-neon-ring" viewBox="0 0 500 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
                   <defs>
-                    <filter id="inputNeonBlur" x="-45%" y="-45%" width="190%" height="190%">
-                      <feGaussianBlur in="SourceGraphic" stdDeviation="4.2"/>
+                    <filter id="inputNeonBlur" x="-50%" y="-50%" width="200%" height="200%">
+                      <feGaussianBlur in="SourceGraphic" stdDeviation="5.5" result="b"/>
+                      <feGaussianBlur in="b" stdDeviation="2.2" result="b2"/>
+                      <feMerge>
+                        <feMergeNode in="b2"/>
+                      </feMerge>
                     </filter>
-                    <linearGradient id="inputNeonFlow" x1="0" y1="0" x2="500" y2="0" gradientUnits="userSpaceOnUse">
-                      <stop offset="0%" stop-color="#320B32" stop-opacity="0.2"/>
-                      <stop offset="12%" stop-color="#9B2381" stop-opacity="0.95"/>
-                      <stop offset="28%" stop-color="#D27889"/>
-                      <stop offset="42%" stop-color="#EAD3DA" stop-opacity="0.9"/>
-                      <stop offset="55%" stop-color="#9B2381"/>
-                      <stop offset="70%" stop-color="#D27889" stop-opacity="0.85"/>
-                      <stop offset="86%" stop-color="#320B32" stop-opacity="0.35"/>
-                      <stop offset="100%" stop-color="#9B2381" stop-opacity="0.75"/>
-                      <animateTransform attributeName="gradientTransform" type="rotate" from="0 250 50" to="360 250 50" dur="20s" repeatCount="indefinite"/>
+                    <!-- Full-spectrum chromatic base: seamless loop + fast rotation (always-visible ring) -->
+                    <linearGradient id="inputChromaticTunnel" x1="0" y1="0" x2="500" y2="0" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#320B32"/>
+                      <stop offset="10%" stop-color="#9B2381"/>
+                      <stop offset="22%" stop-color="#D27889"/>
+                      <stop offset="34%" stop-color="#DC0814"/>
+                      <stop offset="46%" stop-color="#EAD3DA"/>
+                      <stop offset="58%" stop-color="#D27889"/>
+                      <stop offset="70%" stop-color="#9B2381"/>
+                      <stop offset="82%" stop-color="#DC0814"/>
+                      <stop offset="94%" stop-color="#320B32"/>
+                      <stop offset="100%" stop-color="#320B32"/>
+                      <animateTransform attributeName="gradientTransform" type="rotate" from="0 250 50" to="360 250 50" dur="3.2s" repeatCount="indefinite"/>
                     </linearGradient>
-                    <linearGradient id="inputNeonFlowB" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
-                      <stop offset="0%" stop-color="#D27889" stop-opacity="0.5"/>
-                      <stop offset="50%" stop-color="#9B2381" stop-opacity="0.35"/>
-                      <stop offset="100%" stop-color="#EAD3DA" stop-opacity="0.55"/>
-                      <animateTransform attributeName="gradientTransform" type="rotate" from="360 250 50" to="0 250 50" dur="14s" repeatCount="indefinite"/>
+                    <linearGradient id="inputChromaticTunnelB" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#EAD3DA" stop-opacity="0.95"/>
+                      <stop offset="20%" stop-color="#D27889"/>
+                      <stop offset="40%" stop-color="#9B2381"/>
+                      <stop offset="58%" stop-color="#DC0814"/>
+                      <stop offset="78%" stop-color="#320B32"/>
+                      <stop offset="100%" stop-color="#EAD3DA" stop-opacity="0.95"/>
+                      <animateTransform attributeName="gradientTransform" type="rotate" from="360 250 50" to="0 250 50" dur="2.6s" repeatCount="indefinite"/>
+                    </linearGradient>
+                    <!-- Bright traveling pulse (short dash) rides on top of always-on chromatic base -->
+                    <linearGradient id="inputNeonSpark" x1="0" y1="0" x2="180" y2="0" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#320B32" stop-opacity="0"/>
+                      <stop offset="35%" stop-color="#EAD3DA" stop-opacity="0.95"/>
+                      <stop offset="50%" stop-color="#FFFFFF" stop-opacity="0.55"/>
+                      <stop offset="65%" stop-color="#D27889"/>
+                      <stop offset="100%" stop-color="#320B32" stop-opacity="0"/>
+                      <animateTransform attributeName="gradientTransform" type="translate" additive="sum" values="-80,0;520,0;-80,0" keyTimes="0;0.85;1" dur="2s" repeatCount="indefinite"/>
                     </linearGradient>
                   </defs>
-                  <rect x="2.5" y="2.5" width="495" height="95" rx="47.5" ry="47.5" fill="none" pathLength="100" stroke="url(#inputNeonFlowB)" stroke-width="8" stroke-linecap="round" stroke-dasharray="24 76" opacity="0.42" filter="url(#inputNeonBlur)">
-                    <animate attributeName="stroke-dashoffset" values="0;-100" dur="22s" repeatCount="indefinite"/>
-                  </rect>
-                  <rect x="2.5" y="2.5" width="495" height="95" rx="47.5" ry="47.5" fill="none" pathLength="100" stroke="url(#inputNeonFlow)" stroke-width="2.35" stroke-linecap="round" stroke-dasharray="20 80">
-                    <animate attributeName="stroke-dashoffset" values="0;100" dur="9.5s" repeatCount="indefinite"/>
+                  <!-- Layer A: soft tunnel glow — continuous stroke, never gaps -->
+                  <rect x="2.5" y="2.5" width="495" height="95" rx="47.5" ry="47.5" fill="none" pathLength="100" stroke="url(#inputChromaticTunnel)" stroke-width="12" stroke-linecap="round" opacity="0.72" filter="url(#inputNeonBlur)"/>
+                  <!-- Layer B: saturated body — continuous, counter-rotating hues -->
+                  <rect x="2.5" y="2.5" width="495" height="95" rx="47.5" ry="47.5" fill="none" pathLength="100" stroke="url(#inputChromaticTunnelB)" stroke-width="4.25" stroke-linecap="round" opacity="0.9"/>
+                  <!-- Layer C: crisp chromatic line — full ring -->
+                  <rect x="2.5" y="2.5" width="495" height="95" rx="47.5" ry="47.5" fill="none" pathLength="100" stroke="url(#inputChromaticTunnel)" stroke-width="2.25" stroke-linecap="round" opacity="0.88"/>
+                  <!-- Layer D: fast traveling highlight (dash) — adds motion; base layers keep perimeter lit -->
+                  <rect x="2.5" y="2.5" width="495" height="95" rx="47.5" ry="47.5" fill="none" pathLength="100" stroke="url(#inputNeonSpark)" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="28 72" opacity="0.95">
+                    <animate attributeName="stroke-dashoffset" values="0;100" dur="2.4s" repeatCount="indefinite"/>
                   </rect>
                 </svg>
                 <div class="input-shell">
                   <textarea id="message" rows="1" placeholder="Message the cluster agent…" autocomplete="off"></textarea>
                   <button type="button" id="sendBtn" title="Send" aria-label="Send message">
-                    <svg viewBox="-1.5 -1.25 27 26.5" overflow="visible" aria-hidden="true" fill="none"><path stroke="currentColor" stroke-width="2.45" stroke-linecap="round" stroke-linejoin="round" d="M12 21.5V12.85"/><path stroke="currentColor" stroke-width="2.45" stroke-linecap="round" stroke-linejoin="round" d="M6.62 12.85 12 4.85 17.38 12.85"/></svg>
+                    <svg viewBox="-3 -2.75 30 30" overflow="visible" aria-hidden="true" fill="none"><path stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M12 22.25V12.95"/><path stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M6.45 12.95 12 2.85 17.55 12.95"/></svg>
                   </button>
                 </div>
               </div>
