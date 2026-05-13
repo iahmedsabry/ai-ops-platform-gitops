@@ -13,9 +13,9 @@ data:
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#320B32">
 
-        <base href="/k8s-ops-chat/">
+        <base href="/kai/">
 
-        <title>K8s Ops Chat</title>
+        <title>KAI</title>
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -623,13 +623,18 @@ data:
             color: rgba(234, 211, 218, 0.65);
           }
 
-          #sendBtn svg {
-            stroke: currentColor;
-            fill: none;
-            width: 24px;
-            height: 24px;
+          #sendBtn .send-arrow-char {
+            font-family: var(--font-ui), "Segoe UI Symbol", "Noto Sans", sans-serif;
+            font-size: 1.28rem;
+            font-weight: 550;
+            line-height: 1;
             display: block;
-            flex-shrink: 0;
+            opacity: 0;
+            transition: opacity 0.16s ease;
+          }
+
+          #sendBtn.has-text .send-arrow-char {
+            opacity: 1;
           }
 
           .hint {
@@ -732,7 +737,7 @@ data:
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
               </button>
               <div class="brand">
-                <h1>K8s Ops Chat</h1>
+                <h1>KAI</h1>
                 <p class="subtitle" id="headerSubtitle">Cluster read-only agent</p>
               </div>
             </div>
@@ -807,7 +812,7 @@ data:
                 <div class="input-shell">
                   <textarea id="message" rows="1" placeholder="Message the cluster agent…" autocomplete="off"></textarea>
                   <button type="button" id="sendBtn" title="Send" aria-label="Send message">
-                    <svg viewBox="-2.75 -2.5 29.5 29" fill="none" aria-hidden="true"><path d="M12 20.65V12.9M6.88 12.9L12 4.35L17.12 12.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span class="send-arrow-char" aria-hidden="true">&#8593;</span>
                   </button>
                 </div>
               </div>
@@ -819,7 +824,7 @@ data:
 
       <script>
         (function () {
-          var STORAGE_KEY = "k8s-ops-chat-sessions-v1";
+          var STORAGE_KEY = "kai-chat-sessions-v1";
           var chatEl = document.getElementById("chat");
           var messagesScroll = document.getElementById("messagesScroll");
           var messageInput = document.getElementById("message");
@@ -1217,6 +1222,14 @@ data:
               Math.min(messageInput.scrollHeight, 200) + "px";
           }
 
+          function syncSendArrow() {
+            if (messageInput.value.trim().length > 0) {
+              sendBtn.classList.add("has-text");
+            } else {
+              sendBtn.classList.remove("has-text");
+            }
+          }
+
           function startNewChat() {
             store.sessions = store.sessions.filter(function (s) {
               return s.messages && s.messages.length > 0;
@@ -1271,6 +1284,7 @@ data:
             appendMessageRowDom("user", message, false);
             messageInput.value = "";
             autoResize();
+            syncSendArrow();
 
             var typingRow = showTypingBubble();
 
@@ -1317,7 +1331,10 @@ data:
             }
           }
 
-          messageInput.addEventListener("input", autoResize);
+          messageInput.addEventListener("input", function () {
+            autoResize();
+            syncSendArrow();
+          });
 
           sendBtn.addEventListener("click", sendMessage);
 
@@ -1361,6 +1378,7 @@ data:
           renderSidebarList();
           renderThread();
           fetchModelMeta();
+          syncSendArrow();
           messageInput.focus();
 
           btnToggleSearch.addEventListener("click", function () {

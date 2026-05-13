@@ -18,8 +18,8 @@ spec:
   rules:
     - http:
         paths:
-          # K8s Ops Chat UI (static HTML in frontend pod)
-          - path: /k8s-ops-chat
+          # KAI UI (static HTML in frontend pod)
+          - path: /kai
             pathType: Prefix
             backend:
               service:
