@@ -1225,6 +1225,39 @@ data:
           /** parallel object URLs for image previews ("" if not image) */
           var attachmentUrlMap = [];
 
+          var MAX_CHAT_IMAGES = 6;
+          var MAX_IMAGE_BYTES = 4 * 1024 * 1024;
+
+          function fileToImagePart(file) {
+            return new Promise(function (resolve, reject) {
+              if (!file || !file.type || file.type.indexOf("image/") !== 0) {
+                resolve(null);
+                return;
+              }
+              if (file.size > MAX_IMAGE_BYTES) {
+                resolve(null);
+                return;
+              }
+              var fr = new FileReader();
+              fr.onload = function () {
+                var du = String(fr.result || "");
+                var m = /^data:([^;]+);base64,(.+)$/.exec(du);
+                if (!m) {
+                  resolve(null);
+                  return;
+                }
+                resolve({
+                  mime_type: m[1].split(";")[0].trim().toLowerCase(),
+                  data: m[2].replace(/\s/g, ""),
+                });
+              };
+              fr.onerror = function () {
+                reject(fr.error);
+              };
+              fr.readAsDataURL(file);
+            });
+          }
+
           function closeAttachMenu() {
             if (!attachMenu || !attachBtn) return;
             attachMenu.setAttribute("hidden", "hidden");
@@ -1876,6 +1909,37 @@ data:
             busy = true;
             sendBtn.disabled = true;
 
+            var imagePromises = [];
+            for (i = 0; i < selectedFiles.length; i++) {
+              imagePromises.push(fileToImagePart(selectedFiles[i]));
+            }
+
+            var imageParts = [];
+            try {
+              var partsResults = await Promise.all(imagePromises);
+              var pi;
+              for (pi = 0; pi < partsResults.length; pi++) {
+                if (partsResults[pi]) imageParts.push(partsResults[pi]);
+                if (imageParts.length >= MAX_CHAT_IMAGES) break;
+              }
+            } catch (readErr) {
+              busy = false;
+              sendBtn.disabled = false;
+              var errRead = String(readErr && readErr.message ? readErr.message : readErr);
+              appendToStore(
+                "assistant",
+                "Could not read an attachment: " + errRead,
+                true
+              );
+              appendMessageRowDom(
+                "assistant",
+                "Could not read an attachment: " + errRead,
+                true
+              );
+              messageInput.focus();
+              return;
+            }
+
             ensureDraftSession();
             appendToStore("user", outbound, false);
             appendMessageRowDom("user", outbound, false);
@@ -1887,10 +1951,13 @@ data:
             var typingRow = showTypingBubble();
 
             try {
+              var payload = { message: outbound };
+              if (imageParts.length) payload.images = imageParts;
+
               var response = await fetch("/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: outbound }),
+                body: JSON.stringify(payload),
               });
 
               var data;
@@ -2001,6 +2068,30 @@ data:
               });
             }
           }
+
+          messageInput.addEventListener("paste", function (e) {
+            var cd = e.clipboardData;
+            if (!cd || !cd.items || !cd.items.length) return;
+            var added = false;
+            var ii;
+            for (ii = 0; ii < cd.items.length; ii++) {
+              var it = cd.items[ii];
+              if (it.kind !== "file") continue;
+              if (!it.type || it.type.indexOf("image/") !== 0) continue;
+              var f = it.getAsFile();
+              if (!f || f.size > MAX_IMAGE_BYTES) continue;
+              if (selectedFiles.length >= MAX_CHAT_IMAGES) break;
+              selectedFiles.push(f);
+              attachmentUrlMap.push(URL.createObjectURL(f));
+              added = true;
+            }
+            if (added) {
+              e.preventDefault();
+              syncAttachmentUi();
+              syncSendArrow();
+              autoResize();
+            }
+          });
 
           messageInput.addEventListener("keydown", function (e) {
             if (e.key === "Enter" && !e.shiftKey) {
