@@ -743,21 +743,28 @@ data:
             display: flex;
             flex-direction: row;
             align-items: center;
-            gap: 11px;
+            gap: 10px;
             width: 100%;
-            padding: 10px 12px;
+            padding: 9px 11px;
             margin: 0;
             border: none;
             border-radius: 10px;
             background: transparent;
             color: var(--text);
             font-family: var(--font-ui);
-            font-size: 0.895rem;
+            font-size: 0.8125rem;
             font-weight: 500;
-            line-height: 1.25;
+            line-height: 1.35;
             cursor: pointer;
             text-align: left;
             transition: background 0.14s ease, color 0.12s ease;
+          }
+
+          .attach-menu-label {
+            font-size: inherit;
+            font-weight: inherit;
+            line-height: inherit;
+            letter-spacing: 0.01em;
           }
 
           .attach-menu-item:hover {
@@ -770,8 +777,8 @@ data:
           }
 
           .attach-menu-item .attach-menu-clip-svg {
-            width: 18px;
-            height: 18px;
+            width: 21px;
+            height: 21px;
             flex-shrink: 0;
             display: block;
             color: currentColor;
@@ -779,6 +786,9 @@ data:
 
           .attach-menu-item .attach-menu-clip-svg path {
             stroke: currentColor;
+            stroke-width: 1.42;
+            stroke-linecap: round;
+            stroke-linejoin: round;
             fill: none;
           }
 
@@ -1198,7 +1208,7 @@ data:
                         <div class="attach-menu" id="attachMenu" role="menu" hidden>
                           <button type="button" class="attach-menu-item" id="attachMenuUpload" role="menuitem">
                             <svg class="attach-menu-clip-svg" viewBox="0 0 24 24" aria-hidden="true">
-                              <path transform="translate(-4 0)" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" d="M16 7L16 17A3.5 3.5 0 0 1 9 17L9 9.5A2.5 2.5 0 0 1 14 9.5L14 16A1.5 1.5 0 0 1 11 16L11 11.25"/>
+                              <path transform="translate(-4 0)" d="M16 7L16 17A3.5 3.5 0 0 1 9 17L9 9.5A2.5 2.5 0 0 1 14 9.5L14 16A1.5 1.5 0 0 1 11 16L11 11.25"/>
                             </svg>
                             <span class="attach-menu-label">Upload photos &amp; files</span>
                           </button>
