@@ -736,9 +736,7 @@ data:
             border-radius: 14px;
             background: #ffffff;
             border: 1px solid var(--border-hair);
-            box-shadow:
-              0 10px 38px rgba(50, 11, 50, 0.12),
-              0 0 0 1px rgba(155, 35, 129, 0.08);
+            box-shadow: 0 8px 28px rgba(50, 11, 50, 0.1);
           }
 
           .attach-menu-item {
@@ -776,11 +774,7 @@ data:
             height: 18px;
             flex-shrink: 0;
             display: block;
-            color: var(--c-purple);
-          }
-
-          .attach-menu-item:hover .attach-menu-clip-svg {
-            color: var(--c-plum);
+            color: currentColor;
           }
 
           .attach-menu-item .attach-menu-clip-svg path {
@@ -821,8 +815,8 @@ data:
           }
 
           .attach-btn .attach-plus-icon {
-            width: 21px;
-            height: 21px;
+            width: 24px;
+            height: 24px;
             stroke: currentColor;
             fill: none;
             display: block;
@@ -1199,14 +1193,12 @@ data:
                       <div class="attach-menu-anchor">
                         <button type="button" class="attach-btn" id="attachBtn" title="Add attachment (Shift+click to clear all)" aria-haspopup="menu" aria-expanded="false" aria-controls="attachMenu" aria-label="Open attachment menu">
                           <span class="attach-badge" id="attachBadge" hidden aria-hidden="true">0</span>
-                          <svg class="attach-plus-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7v10M7 12h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                          <svg class="attach-plus-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6.5v11M6.5 12h11" fill="none" stroke="currentColor" stroke-width="1.45" stroke-linecap="round"/></svg>
                         </button>
                         <div class="attach-menu" id="attachMenu" role="menu" hidden>
                           <button type="button" class="attach-menu-item" id="attachMenuUpload" role="menuitem">
                             <svg class="attach-menu-clip-svg" viewBox="0 0 24 24" aria-hidden="true">
-                              <g transform="rotate(-90 12 12)">
-                                <path stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" d="M16 7L16 17A3.5 3.5 0 0 1 9 17L9 9.5A2.5 2.5 0 0 1 14 9.5L14 16A1.5 1.5 0 0 1 11 16L11 11.25"/>
-                              </g>
+                              <path transform="translate(-4 0)" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" d="M16 7L16 17A3.5 3.5 0 0 1 9 17L9 9.5A2.5 2.5 0 0 1 14 9.5L14 16A1.5 1.5 0 0 1 11 16L11 11.25"/>
                             </svg>
                             <span class="attach-menu-label">Upload photos &amp; files</span>
                           </button>
