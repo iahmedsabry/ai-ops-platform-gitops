@@ -520,10 +520,13 @@ data:
           .input-shell {
             position: relative;
             z-index: 1;
-            display: block;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: stretch;
             border: none;
             border-radius: 9999px;
-            padding: 6px 10px;
+            padding: 8px 10px;
             min-height: 46px;
             background: #ffffff;
             box-shadow: 0 1px 3px rgba(50, 11, 50, 0.08);
@@ -536,11 +539,15 @@ data:
               0 2px 8px rgba(50, 11, 50, 0.08);
           }
 
-          /* Textarea + anchored attach (bottom-left) and send (bottom-right) */
+          /* Bottom-anchored field: textarea grows upward (column-reverse); icons stay at bottom */
           .composer-field-wrap {
             position: relative;
+            flex: 0 0 auto;
             width: 100%;
-            min-height: 42px;
+            min-height: 36px;
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: stretch;
           }
 
           .composer-file-input {
@@ -557,12 +564,12 @@ data:
 
           .attach-btn {
             position: absolute;
-            left: 4px;
-            bottom: 5px;
+            left: 5px;
+            bottom: 6px;
             z-index: 3;
             box-sizing: border-box;
-            width: 36px;
-            height: 36px;
+            width: 34px;
+            height: 34px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -593,12 +600,13 @@ data:
           }
 
           .attach-btn svg {
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             stroke: currentColor;
             fill: none;
             display: block;
             pointer-events: none;
+            flex-shrink: 0;
           }
 
           .attach-btn .attach-badge {
@@ -655,8 +663,8 @@ data:
             min-height: 36px;
             max-height: 200px;
             height: 36px;
-            /* Reserve space for attach (left) + send (right); no layout shift when send appears */
-            padding: 9px 52px 9px 46px;
+            /* Left / right insets for anchored icons; vertical padding tuned for bottom-grown field */
+            padding: 8px 50px 8px 44px;
             overflow-x: hidden;
             overflow-y: hidden;
             font-family: var(--font-ui);
@@ -667,6 +675,8 @@ data:
             background: transparent;
             color: var(--text);
             transition: height 0.18s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            flex: 0 0 auto;
+            align-self: stretch;
           }
 
           /* Thin scrollbar only at max height when content overflows */
@@ -713,12 +723,12 @@ data:
             opacity: 0.92;
           }
 
-          /* Fixed bottom-right; reserve horizontal space via textarea padding — no vertical jump */
+          /* Fixed bottom-right; must match reserved textarea padding */
           #sendBtn {
             box-sizing: border-box;
             position: absolute;
-            right: 5px;
-            bottom: 5px;
+            right: 6px;
+            bottom: 6px;
             z-index: 3;
             width: 38px;
             height: 38px;
@@ -961,7 +971,7 @@ data:
                     <input type="file" id="attachmentInput" class="composer-file-input" multiple tabindex="-1" aria-hidden="true" accept="image/*,.pdf,.txt,.md,.yaml,.yml,.json,.csv,.png,.jpg,.jpeg,.gif,.webp,.svg,application/pdf,*/*"/>
                     <button type="button" class="attach-btn" id="attachBtn" title="Attach files or images (Shift+click to clear)" aria-label="Attach files or images">
                       <span class="attach-badge" id="attachBadge" hidden aria-hidden="true">0</span>
-                      <svg viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
                     </button>
                     <button type="button" id="sendBtn" title="Send" aria-label="Send message" aria-hidden="true" tabindex="-1">
                       <span class="send-arrow-char" aria-hidden="true">&#8593;</span>
