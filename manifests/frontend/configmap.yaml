@@ -1384,9 +1384,30 @@ data:
           }
 
           function titleFromFirstMessage(text) {
+            var softTruncTitle = function (s, max) {
+              if (!s || !s.trim()) return "Chat";
+              s = String(s).trim();
+              if (s.length <= max) return s;
+              var cut = s.slice(0, max - 1);
+              var sp = cut.lastIndexOf(" ");
+              if (sp > max * 0.38) cut = cut.slice(0, sp);
+              return cut + "…";
+            };
+
+            var sIn = String(text);
+            var fromFilesHead = "";
+            var hdr = /^\[Attached file\(s\):\s*([^\]]+)\]/im.exec(sIn);
+            if (hdr && hdr[1]) {
+              fromFilesHead = hdr[1].split(",")[0].trim();
+            }
+
             var attachRe = /^\[Attached file\(s\):[^\]]*\]\s*\n*/i;
-            var raw = String(text).replace(attachRe, "").replace(/\s+/g, " ").trim();
-            if (!raw) return "Chat";
+            var raw = sIn.replace(attachRe, "").replace(/\s+/g, " ").trim();
+            if (!raw) {
+              if (fromFilesHead)
+                return softTruncTitle(fromFilesHead, 48);
+              return "Chat";
+            }
 
             var topic = raw.replace(/[?!.]+$/g, "").trim();
             var lo = topic.toLowerCase();
@@ -1446,14 +1467,6 @@ data:
             } while (loop);
 
             lo = lo.replace(/^(the|a|an)\s+/, "").trim();
-
-            function softTruncTitle(s, max) {
-              if (s.length <= max) return s;
-              var cut = s.slice(0, max - 1);
-              var sp = cut.lastIndexOf(" ");
-              if (sp > max * 0.38) cut = cut.slice(0, sp);
-              return cut + "…";
-            }
 
             function capWord(s) {
               if (!s) return "Chat";
