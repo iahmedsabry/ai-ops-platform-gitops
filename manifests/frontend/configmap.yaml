@@ -626,8 +626,8 @@ data:
           #sendBtn svg {
             stroke: currentColor;
             fill: none;
-            width: 26px;
-            height: 26px;
+            width: 24px;
+            height: 24px;
             display: block;
             flex-shrink: 0;
           }
@@ -807,7 +807,7 @@ data:
                 <div class="input-shell">
                   <textarea id="message" rows="1" placeholder="Message the cluster agent…" autocomplete="off"></textarea>
                   <button type="button" id="sendBtn" title="Send" aria-label="Send message">
-                    <svg viewBox="-3 -2.75 30 30" overflow="visible" aria-hidden="true" fill="none"><path stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M12 22.25V12.95"/><path stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" d="M6.45 12.95 12 2.85 17.55 12.95"/></svg>
+                    <svg viewBox="-2.75 -2.5 29.5 29" fill="none" aria-hidden="true"><path d="M12 20.65V12.9M6.88 12.9L12 4.35L17.12 12.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                   </button>
                 </div>
               </div>
