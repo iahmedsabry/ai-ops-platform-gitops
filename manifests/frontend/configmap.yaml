@@ -575,6 +575,20 @@ data:
             color: var(--text);
           }
 
+          /* Chromium/WebKit: remove default up/down stepper arrows; standard scrollbar thumb/track remain */
+          #message::-webkit-scrollbar-button,
+          #message::-webkit-scrollbar-button:single-button,
+          #message::-webkit-scrollbar-button:double-button,
+          #message::-webkit-scrollbar-button:start:decrement,
+          #message::-webkit-scrollbar-button:end:increment,
+          #message::-webkit-scrollbar-button:vertical:start:decrement,
+          #message::-webkit-scrollbar-button:vertical:end:increment {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+            appearance: none;
+          }
+
           #message::placeholder {
             color: var(--muted);
             font-weight: 400;
