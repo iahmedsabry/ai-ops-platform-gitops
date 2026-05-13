@@ -47,11 +47,10 @@ data:
             /* Shared column width with composer pill (answers match input shell) */
             --chat-col-max: min(600px, 94vw);
             --chat-col-pad-x: clamp(12px, 3vw, 20px);
-            /* Assistant bubbles + composer pill body + strip above pill */
+            --pill-radius: 22px;
+            --pill-border: 1px solid rgba(155, 35, 129, 0.14);
+            /* Assistant bubbles + composer pill body */
             --bubble-surface: #ffffff;
-            /* Narrower than full column (~pill corner radius inset) */
-            --assistant-msg-inset-total: 22px;
-            /* Breathable strip so input-shell upper border reads clearly */
             --composer-strip-h: 14px;
             --danger-bg: rgba(220, 8, 20, 0.1);
             --danger-text: #9a0610;
@@ -374,8 +373,7 @@ data:
           .messages-inner {
             max-width: var(--chat-col-max);
             margin: 0 auto;
-            /* Horizontal inset lives on .messages-scroll + shared --chat-col-pad-x
-               so assistant width matches composer-inner pill */
+            /* Same column as composer-inner / message pill */
             padding: clamp(12px, 2vw, 20px) 0 12px;
             display: flex;
             flex-direction: column;
@@ -395,25 +393,24 @@ data:
 
           .msg-msg.user { align-self: flex-end; max-width: min(560px, 92%); }
           .msg-msg.assistant {
-            align-self: center;
-            width: calc(100% - var(--assistant-msg-inset-total));
-            max-width: calc(
-              100% - var(--assistant-msg-inset-total)
-            );
+            align-self: stretch;
+            width: 100%;
+            max-width: 100%;
           }
 
           .bubble-shell { width: 100%; }
 
           .bubble {
-            border-radius: 12px;
+            border-radius: var(--pill-radius);
             padding: 11px 14px;
             line-height: 1.5;
             font-size: 0.9rem;
             word-break: break-word;
-            border: 1px solid var(--border-hair);
+            border: var(--pill-border);
           }
 
           .msg-msg.user .bubble {
+            border-radius: var(--pill-radius);
             background: linear-gradient(
               145deg,
               rgba(234, 211, 218, 0.85) 0%,
@@ -425,13 +422,17 @@ data:
 
           .msg-msg.assistant .bubble {
             background: var(--bubble-surface);
-            border-color: var(--border-hair);
-            box-shadow: 0 1px 2px rgba(50, 11, 50, 0.04);
+            border: var(--pill-border);
+            box-shadow:
+              0 0 0 1px rgba(255, 255, 255, 0.65) inset,
+              0 1px 2px rgba(50, 11, 50, 0.04),
+              0 -1px 2px rgba(50, 11, 50, 0.03);
           }
 
           .bubble.error {
             background: var(--danger-bg);
             color: var(--danger-text);
+            border-radius: var(--pill-radius);
             border-color: var(--danger-br);
           }
 
@@ -539,7 +540,7 @@ data:
             box-sizing: border-box;
             padding: 0;
             margin: 0 0 6px;
-            border-radius: 22px;
+            border-radius: var(--pill-radius);
             isolation: isolate;
             overflow: visible;
             background: transparent;
@@ -553,8 +554,8 @@ data:
             min-width: 0;
             display: flex;
             flex-direction: column;
-            border: 1px solid rgba(155, 35, 129, 0.14);
-            border-radius: 22px;
+            border: var(--pill-border);
+            border-radius: var(--pill-radius);
             padding: 6px 8px;
             min-height: 48px;
             background: var(--bubble-surface);
