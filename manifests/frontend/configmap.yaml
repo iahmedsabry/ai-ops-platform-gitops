@@ -513,7 +513,6 @@ data:
             z-index: 24;
             padding: 0 var(--chat-col-pad-x)
               calc(12px + env(safe-area-inset-bottom));
-            border-top: 1px solid var(--border-hair);
             background: var(--bg-main);
           }
 
@@ -528,14 +527,7 @@ data:
             display: flex;
             flex-direction: column;
             align-items: stretch;
-          }
-
-          /* Same surface as message bubbles — highlights input-shell border */
-          .composer-inner::before {
-            content: "";
-            flex: 0 0 auto;
-            height: var(--composer-strip-h);
-            background: var(--bubble-surface);
+            padding-top: var(--composer-strip-h);
           }
 
           /* Composer: light, even border (no heavy gradient ring) */
