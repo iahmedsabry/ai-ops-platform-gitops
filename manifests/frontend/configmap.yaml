@@ -496,6 +496,8 @@ data:
             min-width: 0;
             margin: 0 auto;
             overflow: visible;
+            position: relative;
+            z-index: 28;
           }
 
           /* Moving tunnel border: SVG layer (animations) inside fixed-radius clip */
@@ -537,7 +539,7 @@ data:
             background: #ffffff;
             box-shadow: 0 1px 3px rgba(50, 11, 50, 0.08);
             transition: box-shadow 0.2s ease;
-            overflow: hidden;
+            overflow: visible;
           }
 
           .input-shell:focus-within {
@@ -710,6 +712,69 @@ data:
             opacity: 0;
           }
 
+          .attach-menu-anchor {
+            position: relative;
+            display: inline-flex;
+            align-items: flex-end;
+            justify-content: center;
+          }
+
+          .attach-menu {
+            position: absolute;
+            left: 0;
+            bottom: calc(100% + 8px);
+            z-index: 80;
+            min-width: clamp(216px, 72vw, 280px);
+            padding: 6px;
+            border-radius: 12px;
+            background: #2b2b2f;
+            box-shadow:
+              0 10px 40px rgba(0, 0, 0, 0.32),
+              0 0 0 1px rgba(255, 255, 255, 0.06);
+          }
+
+          .attach-menu-item {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            padding: 10px 12px;
+            margin: 0;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: #f5f5f7;
+            font-family: var(--font-ui);
+            font-size: 0.9rem;
+            font-weight: 450;
+            line-height: 1.25;
+            cursor: pointer;
+            text-align: left;
+            transition: background 0.14s ease;
+          }
+
+          .attach-menu-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+          }
+
+          .attach-menu-item:active {
+            background: rgba(255, 255, 255, 0.05);
+          }
+
+          .attach-menu-item .attach-menu-clip-svg {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            display: block;
+            color: #ffffff;
+          }
+
+          .attach-menu-item .attach-menu-clip-svg path {
+            stroke: currentColor;
+            fill: none;
+          }
+
           .attach-btn {
             position: relative;
             z-index: 3;
@@ -742,9 +807,9 @@ data:
             transform: translateY(-3px) scale(0.96);
           }
 
-          .attach-btn svg {
-            width: 27px;
-            height: 27px;
+          .attach-btn .attach-plus-icon {
+            width: 26px;
+            height: 26px;
             stroke: currentColor;
             fill: none;
             display: block;
@@ -1118,10 +1183,22 @@ data:
                   <div class="composer-row">
                     <div class="composer-attach-slot">
                       <input type="file" id="attachmentInput" class="composer-file-input" multiple tabindex="-1" aria-hidden="true" accept="image/*,.pdf,.txt,.md,.yaml,.yml,.json,.csv,.png,.jpg,.jpeg,.gif,.webp,.svg,application/pdf,*/*"/>
-                      <button type="button" class="attach-btn" id="attachBtn" title="Attach files or images (Shift+click to clear)" aria-label="Attach files or images">
-                        <span class="attach-badge" id="attachBadge" hidden aria-hidden="true">0</span>
-                        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M16 7L16 17A3.5 3.5 0 0 1 9 17L9 9.5A2.5 2.5 0 0 1 14 9.5L14 16A1.5 1.5 0 0 1 11 16L11 11.25"/></svg>
-                      </button>
+                      <div class="attach-menu-anchor">
+                        <button type="button" class="attach-btn" id="attachBtn" title="Add attachment (Shift+click to clear all)" aria-haspopup="menu" aria-expanded="false" aria-controls="attachMenu" aria-label="Open attachment menu">
+                          <span class="attach-badge" id="attachBadge" hidden aria-hidden="true">0</span>
+                          <svg class="attach-plus-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6v12M6 12h12" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/></svg>
+                        </button>
+                        <div class="attach-menu" id="attachMenu" role="menu" hidden>
+                          <button type="button" class="attach-menu-item" id="attachMenuUpload" role="menuitem">
+                            <svg class="attach-menu-clip-svg" viewBox="0 0 24 24" aria-hidden="true">
+                              <g transform="rotate(-90 12 12)">
+                                <path stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" d="M16 7L16 17A3.5 3.5 0 0 1 9 17L9 9.5A2.5 2.5 0 0 1 14 9.5L14 16A1.5 1.5 0 0 1 11 16L11 11.25"/>
+                              </g>
+                            </svg>
+                            <span class="attach-menu-label">Upload photos &amp; files</span>
+                          </button>
+                        </div>
+                      </div>
                     </div>
                     <div class="composer-textarea-wrap">
                       <textarea id="message" rows="1" placeholder="Message the cluster agent…" autocomplete="off"></textarea>
@@ -1134,7 +1211,7 @@ data:
                   </div>
                 </div>
               </div>
-              <p class="hint">Enter to send · Shift+Enter for new line · attach files · × on a chip removes it · Shift+click clip clears all</p>
+              <p class="hint">Enter to send · Shift+Enter for new line · + uploads · × on a chip removes · Shift+click + clears all</p>
             </div>
           </div>
         </div>
@@ -1150,6 +1227,8 @@ data:
           var attachmentInput = document.getElementById("attachmentInput");
           var attachBtn = document.getElementById("attachBtn");
           var attachBadge = document.getElementById("attachBadge");
+          var attachMenu = document.getElementById("attachMenu");
+          var attachMenuUpload = document.getElementById("attachMenuUpload");
           var composerAttachmentsEl = document.getElementById("composerAttachments");
           var emptyState = document.getElementById("emptyState");
           var sidebarList = document.getElementById("sidebarList");
@@ -1171,6 +1250,25 @@ data:
           var selectedFiles = [];
           /** parallel object URLs for image previews ("" if not image) */
           var attachmentUrlMap = [];
+
+          function closeAttachMenu() {
+            if (!attachMenu || !attachBtn) return;
+            attachMenu.setAttribute("hidden", "hidden");
+            attachBtn.setAttribute("aria-expanded", "false");
+          }
+
+          function openAttachMenu() {
+            if (!attachMenu || !attachBtn) return;
+            attachMenu.removeAttribute("hidden");
+            attachBtn.setAttribute("aria-expanded", "true");
+            if (attachMenuUpload) attachMenuUpload.focus();
+          }
+
+          function toggleAttachMenu() {
+            if (!attachMenu) return;
+            if (attachMenu.hasAttribute("hidden")) openAttachMenu();
+            else closeAttachMenu();
+          }
 
           function escapeHtml(text) {
             var d = document.createElement("div");
@@ -1801,13 +1899,40 @@ data:
             attachBtn.addEventListener("click", function (e) {
               if (e.shiftKey && selectedFiles.length) {
                 e.preventDefault();
+                e.stopPropagation();
+                closeAttachMenu();
                 clearAttachments();
                 syncSendArrow();
                 return;
               }
               e.preventDefault();
-              attachmentInput.click();
+              e.stopPropagation();
+              toggleAttachMenu();
             });
+
+            document.addEventListener("click", function (e) {
+              if (!attachMenu || attachMenu.hasAttribute("hidden")) return;
+              if (attachBtn && attachBtn.contains(e.target)) return;
+              if (attachMenu.contains(e.target)) return;
+              closeAttachMenu();
+            });
+
+            document.addEventListener("keydown", function (e) {
+              if (e.key !== "Escape") return;
+              if (!attachMenu || attachMenu.hasAttribute("hidden")) return;
+              e.preventDefault();
+              closeAttachMenu();
+              attachBtn.focus();
+            });
+
+            if (attachMenuUpload) {
+              attachMenuUpload.addEventListener("click", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                closeAttachMenu();
+                attachmentInput.click();
+              });
+            }
 
             attachmentInput.addEventListener("change", function () {
               var files = attachmentInput.files;
