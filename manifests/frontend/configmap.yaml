@@ -459,7 +459,7 @@ data:
             overflow: visible;
           }
 
-          /* Blurred aurora halo + glass pill; border motion on .input-shell */
+          /* Blurred aurora fill (clipped inside pill) + glass pill; rotating border spotlight */
           .input-aurora {
             position: relative;
             z-index: 0;
@@ -467,7 +467,8 @@ data:
             padding: 2px;
             margin: 8px 2px 10px;
             border-radius: 9999px;
-            overflow: visible;
+            overflow: hidden;
+            isolation: isolate;
           }
 
           .input-aurora::before,
@@ -475,46 +476,46 @@ data:
             content: "";
             position: absolute;
             pointer-events: none;
-            border-radius: 9999px;
+            border-radius: inherit;
             z-index: 0;
           }
 
           .input-aurora::before {
-            inset: -10px -6px -10px -6px;
+            inset: 0;
             background:
               radial-gradient(
                 ellipse 85% 70% at 28% 42%,
-                rgba(99, 102, 241, 0.42) 0%,
-                rgba(124, 58, 237, 0.22) 38%,
-                transparent 68%
+                rgba(99, 102, 241, 0.5) 0%,
+                rgba(124, 58, 237, 0.26) 38%,
+                transparent 72%
               ),
               radial-gradient(
                 ellipse 75% 80% at 72% 58%,
-                rgba(59, 130, 246, 0.28) 0%,
-                rgba(139, 92, 246, 0.18) 45%,
-                transparent 70%
+                rgba(59, 130, 246, 0.34) 0%,
+                rgba(139, 92, 246, 0.22) 45%,
+                transparent 74%
               );
-            filter: blur(24px);
-            opacity: 0.72;
+            filter: blur(18px);
+            opacity: 0.76;
             will-change: transform, opacity;
             animation: aurora-drift-a 36s ease-in-out infinite;
           }
 
           .input-aurora::after {
-            inset: -6px;
+            inset: 0;
             background:
               radial-gradient(
                 ellipse 60% 55% at 65% 35%,
-                rgba(167, 139, 250, 0.35) 0%,
-                transparent 58%
+                rgba(167, 139, 250, 0.4) 0%,
+                transparent 62%
               ),
               radial-gradient(
                 ellipse 70% 65% at 38% 68%,
-                rgba(56, 189, 248, 0.2) 0%,
-                transparent 62%
+                rgba(56, 189, 248, 0.24) 0%,
+                transparent 66%
               );
-            filter: blur(20px);
-            opacity: 0.38;
+            filter: blur(14px);
+            opacity: 0.42;
             animation: aurora-drift-b 44s ease-in-out infinite;
           }
 
@@ -572,24 +573,24 @@ data:
               padding-box,
               conic-gradient(
                 from var(--aurora-ring, 0deg),
-                rgba(129, 140, 248, 0.55),
-                rgba(99, 102, 241, 0.38),
-                rgba(167, 139, 250, 0.48),
-                rgba(59, 130, 246, 0.42),
-                rgba(124, 58, 237, 0.4),
-                rgba(139, 92, 246, 0.45),
-                rgba(129, 140, 248, 0.55)
+                rgba(99, 102, 241, 0.2) 0deg,
+                rgba(124, 58, 237, 0.24) 90deg,
+                rgba(167, 139, 250, 0.5) 140deg,
+                rgba(216, 220, 255, 0.72) 168deg,
+                rgba(180, 198, 255, 0.55) 180deg,
+                rgba(147, 197, 253, 0.38) 210deg,
+                rgba(139, 92, 246, 0.22) 280deg,
+                rgba(99, 102, 241, 0.2) 360deg
               )
               border-box;
             background-clip: padding-box, border-box;
-            animation: aurora-ring-rotate 40s linear infinite;
+            animation: aurora-ring-rotate 28s linear infinite;
             box-shadow:
               inset 0 1px 0 rgba(255, 255, 255, 0.11),
               inset 0 -1px 0 rgba(0, 0, 0, 0.16),
+              inset 0 0 28px rgba(99, 102, 241, 0.1),
               0 0 0 1px rgba(255, 255, 255, 0.06),
-              0 6px 28px rgba(0, 0, 0, 0.34),
-              0 2px 16px rgba(99, 102, 241, 0.12),
-              0 0 36px rgba(99, 102, 241, 0.09);
+              0 6px 28px rgba(0, 0, 0, 0.34);
             transition: box-shadow 0.28s ease, filter 0.28s ease, background 0.28s ease;
           }
 
@@ -597,10 +598,9 @@ data:
             box-shadow:
               inset 0 1px 0 rgba(255, 255, 255, 0.14),
               inset 0 -1px 0 rgba(0, 0, 0, 0.18),
-              0 0 0 1px rgba(165, 180, 252, 0.15),
-              0 8px 32px rgba(0, 0, 0, 0.4),
-              0 3px 22px rgba(99, 102, 241, 0.18),
-              0 0 44px rgba(129, 140, 248, 0.14);
+              inset 0 0 34px rgba(129, 140, 248, 0.14),
+              0 0 0 1px rgba(165, 180, 252, 0.18),
+              0 8px 32px rgba(0, 0, 0, 0.4);
           }
 
           @media (prefers-reduced-motion: reduce) {
@@ -837,9 +837,13 @@ data:
                 <div class="input-shell">
                   <textarea id="message" rows="1" placeholder="Message the cluster agent…" autocomplete="off"></textarea>
                   <button type="button" id="sendBtn" title="Send" aria-label="Send message">
-                    <svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true" fill="none">
-                      <line x1="12" y1="19.8" x2="12" y2="11.15" stroke="currentColor" stroke-width="2.05" stroke-linecap="round"/>
-                      <path d="M7.1 11.15L12 4.6L16.9 11.15" stroke="currentColor" stroke-width="2.05" stroke-linecap="round" stroke-linejoin="round"/>
+                    <svg width="32" height="32" viewBox="0 0 24 24" aria-hidden="true" fill="none">
+                      <path
+                        stroke="currentColor"
+                        stroke-width="2.25"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M12 19.85L12 12.08M7.28 12.08L12 4.55L16.72 12.08"/>
                     </svg>
                   </button>
                 </div>
