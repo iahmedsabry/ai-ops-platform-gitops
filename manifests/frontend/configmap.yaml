@@ -400,6 +400,22 @@ data:
 
           .bubble-shell { width: 100%; }
 
+          /* Typing / thinking row: compact pill; full-width assistant bubbles unchanged */
+          .msg-msg.assistant[data-typing="1"] {
+            align-self: flex-start;
+            width: auto;
+            max-width: 100%;
+          }
+
+          .msg-msg.assistant[data-typing="1"] .bubble-shell {
+            width: auto;
+          }
+
+          .msg-msg.assistant[data-typing="1"] .bubble {
+            width: fit-content;
+            max-width: 100%;
+          }
+
           .bubble {
             border-radius: var(--pill-radius);
             padding: 11px 14px;
