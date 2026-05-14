@@ -629,8 +629,9 @@ data:
             width: auto;
             max-width: min(14.5rem, 52vw);
             min-width: 0;
-            padding: 0 0 6px;
+            padding: 0 0 8px;
             margin: 0;
+            padding-left: 14px;
           }
 
           .prompt-mode-select {
@@ -639,37 +640,46 @@ data:
             width: 100%;
             max-width: 100%;
             margin: 0;
-            padding: 7px 34px 7px 12px;
-            border-radius: 12px;
-            border: 1px solid rgba(155, 35, 129, 0.22);
-            background-color: rgba(255, 255, 255, 0.95);
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239B2381' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            min-height: 36px;
+            padding: 8px 34px 8px 12px;
+            border-radius: 11px;
+            border: 1px solid rgba(155, 35, 129, 0.15);
+            background: rgba(255, 255, 255, 0.78);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%237a5c7a' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 10px center;
-            background-size: 12px 12px;
+            background-position: right 11px center;
+            background-size: 11px 11px;
             font-family: var(--font-ui);
-            font-size: 0.8rem;
+            font-size: 0.8125rem;
             font-weight: 500;
-            line-height: 1.3;
-            color: var(--c-plum);
+            letter-spacing: 0.01em;
+            line-height: 1.25;
+            color: var(--text);
             cursor: pointer;
             appearance: none;
             -webkit-appearance: none;
+            box-shadow:
+              0 0 0 1px rgba(255, 255, 255, 0.55) inset,
+              0 1px 3px rgba(50, 11, 50, 0.05);
             transition:
               border-color 0.18s ease,
-              box-shadow 0.2s ease;
+              box-shadow 0.2s ease,
+              background-color 0.18s ease;
           }
 
           .prompt-mode-select:hover {
-            border-color: rgba(155, 35, 129, 0.32);
+            border-color: rgba(155, 35, 129, 0.26);
+            background-color: rgba(255, 255, 255, 0.92);
           }
 
           .prompt-mode-select:focus {
             outline: none;
-            border-color: rgba(155, 35, 129, 0.4);
+            border-color: rgba(155, 35, 129, 0.34);
+            background-color: #fff;
             box-shadow:
-              0 0 0 2px rgba(155, 35, 129, 0.14),
-              0 0 0 1px rgba(255, 255, 255, 0.65) inset;
+              0 0 0 2px rgba(155, 35, 129, 0.12),
+              0 0 0 1px rgba(255, 255, 255, 0.7) inset,
+              0 1px 4px rgba(50, 11, 50, 0.06);
           }
 
           .compose-att-chip {
@@ -1234,11 +1244,11 @@ data:
 
           <div class="composer">
             <div class="composer-inner">
+              <div class="prompt-mode-wrap" id="promptModeWrap">
+                <select id="promptModeSelect" class="prompt-mode-select" aria-label="Question focus"></select>
+              </div>
               <div class="input-aurora">
                 <div class="input-shell">
-                  <div class="prompt-mode-wrap" id="promptModeWrap">
-                    <select id="promptModeSelect" class="prompt-mode-select" aria-label="Question focus"></select>
-                  </div>
                   <div class="composer-attachments" id="composerAttachments" hidden></div>
                   <div class="composer-row">
                     <div class="composer-attach-slot">
