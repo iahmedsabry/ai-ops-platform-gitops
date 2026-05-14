@@ -624,14 +624,14 @@ data:
             border-radius: 999px;
           }
 
+          /* Inline with #message text: attach slot + row gap + textarea padding-left */
           .prompt-mode-bar {
             align-self: flex-start;
             width: 100%;
             min-width: 0;
             flex: 0 0 auto;
-            padding-top: 3px;
-            margin-top: 2px;
-            border-top: 1px solid rgba(50, 11, 50, 0.06);
+            padding: 0 0 0 calc(40px + 4px + 2px);
+            margin: 0;
           }
 
           .prompt-mode-anchor {
@@ -1102,7 +1102,7 @@ data:
             min-height: 40px;
             max-height: 200px;
             height: 40px;
-            padding: 9px 4px 9px 2px;
+            padding: 9px 4px 5px 2px;
             overflow-x: hidden;
             overflow-y: hidden;
             font-family: var(--font-ui);
