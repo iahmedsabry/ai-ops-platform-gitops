@@ -624,33 +624,18 @@ data:
           }
 
           .prompt-mode-wrap {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 8px;
-            width: 100%;
-            min-width: 0;
+            align-self: flex-start;
             flex: 0 0 auto;
-            padding: 2px 0 6px;
-          }
-
-          .prompt-mode-label {
-            flex: 0 0 auto;
-            font-family: var(--font-ui);
-            font-size: 0.72rem;
-            font-weight: 650;
-            color: var(--muted);
-            letter-spacing: 0.02em;
-          }
-
-          .prompt-mode-select-shell {
-            flex: 1 1 auto;
+            width: auto;
+            max-width: min(14.5rem, 52vw);
             min-width: 0;
-            max-width: 100%;
+            padding: 0 0 6px;
+            margin: 0;
           }
 
           .prompt-mode-select {
             box-sizing: border-box;
+            display: block;
             width: 100%;
             max-width: 100%;
             margin: 0;
@@ -1251,13 +1236,10 @@ data:
             <div class="composer-inner">
               <div class="input-aurora">
                 <div class="input-shell">
-                  <div class="composer-attachments" id="composerAttachments" hidden></div>
                   <div class="prompt-mode-wrap" id="promptModeWrap">
-                    <label class="prompt-mode-label" for="promptModeSelect">Focus</label>
-                    <div class="prompt-mode-select-shell">
-                      <select id="promptModeSelect" class="prompt-mode-select"></select>
-                    </div>
+                    <select id="promptModeSelect" class="prompt-mode-select" aria-label="Question focus"></select>
                   </div>
+                  <div class="composer-attachments" id="composerAttachments" hidden></div>
                   <div class="composer-row">
                     <div class="composer-attach-slot">
                       <input type="file" id="attachmentInput" class="composer-file-input" multiple tabindex="-1" aria-hidden="true" accept="image/*,.pdf,.txt,.md,.yaml,.yml,.json,.csv,.png,.jpg,.jpeg,.gif,.webp,.svg,application/pdf,*/*"/>
