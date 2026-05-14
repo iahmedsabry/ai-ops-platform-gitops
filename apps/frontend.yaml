@@ -9,7 +9,7 @@ spec:
   source:
     repoURL: https://github.com/iahmedsabry/ai-ops-platform-gitops.git
     targetRevision: HEAD
-    path: manifests/frontend
+    path: manifests/core-apps/kai-frontend
 
   destination:
     server: https://kubernetes.default.svc

@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: default
+  annotations:
+    # Optional: uncomment if Argo CD Image Updater is installed
+    # argocd-image-updater.argoproj.io/image-list: frontend=iahmedsabry/kai-frontend
+    # argocd-image-updater.argoproj.io/frontend.update-strategy: latest
+    # argocd-image-updater.argoproj.io/write-back-method: git
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: iahmedsabry/kai-frontend:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
