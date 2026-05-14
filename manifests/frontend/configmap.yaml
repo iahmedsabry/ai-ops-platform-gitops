@@ -1524,6 +1524,153 @@ data:
             return best;
           }
 
+          var GENERIC_KW_PHRASE = {
+            cluster: 1,
+            k8s: 1,
+            kubernetes: 1,
+            app: 1,
+            apps: 1,
+          };
+
+          var TITLE_STOP_START =
+            /^(the|a|an|is|are|was|were|be|been|being|do|does|did|can|could|would|will|should|must|may|see|on|in|at|to|for|of|if|as|it|this|that|there|here|what|how|why|when|where|which|who|please|tell|show|help|give|just|very|so|about|into|from|with|without|any|some|have|has|had|get|got)\s+/i;
+
+          var TITLE_BAD_PREFIX =
+            /^(see\s+on|on\s+the|in\s+the|at\s+the|to\s+the|of\s+the|do\s+you|does\s+the|are\s+the|is\s+the|can\s+you|could\s+you|would\s+you|will\s+you|should\s+you|tell\s+me|show\s+me|i\s+want|i\s+need|we\s+have|there\s+is|there\s+are)\b/i;
+
+          function trimTitleTrailingHangers(s) {
+            var t = String(s).trim();
+            var prev = "";
+            while (t !== prev) {
+              prev = t;
+              t = t
+                .replace(/\s+(in|on|at|to|for|of|and|or)\s+the$/i, "")
+                .replace(/\s+the$/i, "")
+                .replace(/\s+a$/i, "")
+                .replace(/\s+an$/i, "")
+                .trim();
+            }
+            return t;
+          }
+
+          function isSubstantialSubtitle(s) {
+            var t = trimTitleTrailingHangers(String(s).trim());
+            if (!t || t.length < 4) return false;
+            if (TITLE_BAD_PREFIX.test(t)) return false;
+            var lower = t.toLowerCase();
+            var words = lower.split(/\s+/).filter(Boolean);
+            if (!words.length) return false;
+            var stops = {
+              the: 1,
+              a: 1,
+              an: 1,
+              is: 1,
+              are: 1,
+              was: 1,
+              were: 1,
+              be: 1,
+              been: 1,
+              being: 1,
+              do: 1,
+              does: 1,
+              did: 1,
+              to: 1,
+              of: 1,
+              in: 1,
+              on: 1,
+              at: 1,
+              for: 1,
+              and: 1,
+              or: 1,
+              if: 1,
+              it: 1,
+              you: 1,
+              we: 1,
+              they: 1,
+              i: 1,
+              me: 1,
+              my: 1,
+              your: 1,
+              our: 1,
+              see: 1,
+              can: 1,
+              could: 1,
+              would: 1,
+              will: 1,
+              how: 1,
+              what: 1,
+              when: 1,
+              where: 1,
+              why: 1,
+              there: 1,
+              here: 1,
+              with: 1,
+              without: 1,
+              have: 1,
+              has: 1,
+              had: 1,
+              get: 1,
+              got: 1,
+              any: 1,
+              all: 1,
+            };
+            var good = 0;
+            var wi;
+            for (wi = 0; wi < words.length; wi++) {
+              if (!stops[words[wi]] && words[wi].length > 1) good++;
+            }
+            if (good < 1) return false;
+            if (t.length < 12 && good < 2) return false;
+            return true;
+          }
+
+          function stripLeadingStopsFromSubtitle(s) {
+            var t = String(s).trim();
+            while (TITLE_STOP_START.test(t)) {
+              t = t.replace(TITLE_STOP_START, "").trim();
+            }
+            return t;
+          }
+
+          function capSeg(s) {
+            if (!s) return "";
+            return s.charAt(0).toUpperCase() + s.slice(1);
+          }
+
+          function subtitleForKeyword(topic, kwHit, trunc) {
+            var reStr =
+              kwHit.phrase.indexOf(" ") >= 0
+                ? "\\b" +
+                  kwHit.phrase.split(/\s+/).map(escapeTitleRe).join("\\s+") +
+                  "\\b"
+                : "\\b" + escapeTitleRe(kwHit.phrase) + "\\b";
+            var reMatch = new RegExp(reStr, "i");
+            var m = reMatch.exec(topic);
+            if (!m) return null;
+
+            var after = topic
+              .slice(m.index + m[0].length)
+              .replace(/^[,\s?.;:]+/, "")
+              .trim();
+            after = stripLeadingStopsFromSubtitle(after);
+            after = trimTitleTrailingHangers(after);
+            if (isSubstantialSubtitle(after)) {
+              return trunc(capSeg(after), 44);
+            }
+
+            var before = topic.slice(0, m.index).trim();
+            var bw = before.split(/\s+/).filter(Boolean);
+            var maxWords = 8;
+            var chunk = bw.slice(Math.max(0, bw.length - maxWords)).join(" ");
+            chunk = stripLeadingStopsFromSubtitle(chunk.toLowerCase());
+            chunk = trimTitleTrailingHangers(chunk);
+            if (isSubstantialSubtitle(chunk)) {
+              return trunc(capSeg(chunk), 44);
+            }
+
+            return null;
+          }
+
           function titleFromFirstMessage(text) {
             var softTruncTitle = function (s, max) {
               if (!s || !s.trim()) return "Chat";
@@ -1564,6 +1711,12 @@ data:
               /^how\s+does\s+/,
               /^how\s+are\s+/,
               /^how\s+/,
+              /^do\s+you\s+/,
+              /^does\s+your\s+/,
+              /^does\s+the\s+/,
+              /^did\s+you\s+/,
+              /^are\s+you\s+/,
+              /^have\s+you\s+/,
               /^why\s+is\s+/,
               /^why\s+does\s+/,
               /^why\s+are\s+/,
@@ -1619,23 +1772,13 @@ data:
             if (!stem) stem = topic.toLowerCase();
 
             var kwHit = findKubeAppKeyword(topic.toLowerCase());
-            if (kwHit) {
-              var reRmStr =
-                kwHit.phrase.indexOf(" ") >= 0
-                  ? "\\b" +
-                    kwHit.phrase.split(/\s+/).map(escapeTitleRe).join("\\s+") +
-                    "\\b"
-                  : "\\b" + escapeTitleRe(kwHit.phrase) + "\\b";
-              var tailLo = lo
-                .replace(new RegExp(reRmStr, "gi"), " ")
-                .replace(/\s+/g, " ")
-                .trim();
-              tailLo = tailLo.replace(/^(the|a|an)\s+/, "").trim();
-              var tailDisp = tailLo ? softTruncTitle(tailLo, 44) : "";
-              var kwCandidate = tailDisp
-                ? kwHit.label + " · " + tailDisp
-                : kwHit.label;
-              return softTruncTitle(kwCandidate, 54);
+            var kwSubtitle =
+              kwHit ? subtitleForKeyword(topic, kwHit, softTruncTitle) : null;
+            if (kwHit && kwSubtitle) {
+              return softTruncTitle(kwHit.label + " · " + kwSubtitle, 54);
+            }
+            if (kwHit && !kwSubtitle && !GENERIC_KW_PHRASE[kwHit.phrase]) {
+              return softTruncTitle(kwHit.label, 48);
             }
 
             var candidate = capWord(softTruncTitle(stem, 50));
