@@ -629,8 +629,8 @@ data:
             width: 100%;
             min-width: 0;
             flex: 0 0 auto;
-            padding-top: 5px;
-            margin-top: 3px;
+            padding-top: 3px;
+            margin-top: 2px;
             border-top: 1px solid rgba(50, 11, 50, 0.06);
           }
 
@@ -645,19 +645,19 @@ data:
             display: inline-flex;
             flex-direction: row;
             align-items: center;
-            gap: 6px;
-            min-height: 30px;
-            padding: 4px 10px 4px 8px;
+            gap: 5px;
+            min-height: 0;
+            padding: 2px 8px 2px 6px;
             margin: 0;
             border-radius: 999px;
             border: 1px solid rgba(155, 35, 129, 0.12);
             background: rgba(250, 248, 251, 0.96);
             color: var(--text-dim);
             font-family: var(--font-ui);
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             font-weight: 500;
             letter-spacing: 0.01em;
-            line-height: 1.2;
+            line-height: 1.18;
             cursor: pointer;
             max-width: min(14.5rem, 72vw);
             transition:
@@ -690,6 +690,8 @@ data:
 
           .prompt-mode-trigger .prompt-mode-trigger-ico .prompt-mode-ico {
             display: block;
+            width: 13px;
+            height: 13px;
           }
 
           .prompt-mode-trigger .prompt-mode-trigger-label {
@@ -703,8 +705,8 @@ data:
 
           .prompt-mode-chevron {
             flex-shrink: 0;
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             stroke: rgba(50, 11, 50, 0.42);
             fill: none;
             display: block;
@@ -714,13 +716,13 @@ data:
           .prompt-mode-menu {
             position: absolute;
             left: 0;
-            bottom: calc(100% + 6px);
+            bottom: calc(100% + 5px);
             z-index: 120;
             min-width: min(232px, calc(100vw - 32px));
             max-width: min(268px, calc(100vw - 24px));
-            max-height: min(320px, 50vh);
+            max-height: min(300px, 48vh);
             overflow-y: auto;
-            padding: 5px;
+            padding: 4px;
             border-radius: 14px;
             background: #ffffff;
             border: 1px solid var(--border-hair);
@@ -741,18 +743,18 @@ data:
             display: flex;
             flex-direction: row;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             width: 100%;
             margin: 0;
-            padding: 6px 9px;
+            padding: 5px 8px;
             border: none;
-            border-radius: 10px;
+            border-radius: 9px;
             background: transparent;
             color: var(--text-dim);
             font-family: var(--font-ui);
-            font-size: 0.78rem;
+            font-size: 0.74rem;
             font-weight: 500;
-            line-height: 1.3;
+            line-height: 1.25;
             letter-spacing: 0.01em;
             cursor: pointer;
             text-align: left;
@@ -762,6 +764,9 @@ data:
           .prompt-mode-item .prompt-mode-ico {
             flex-shrink: 0;
             color: rgba(155, 35, 129, 0.82);
+            width: 13px;
+            height: 13px;
+            display: block;
           }
 
           .prompt-mode-item .prompt-mode-item-text {
@@ -771,8 +776,8 @@ data:
 
           .prompt-mode-item .prompt-mode-check {
             flex-shrink: 0;
-            width: 14px;
-            height: 14px;
+            width: 12px;
+            height: 12px;
             stroke: rgba(155, 35, 129, 0.65);
             fill: none;
             opacity: 0;
@@ -1391,7 +1396,7 @@ data:
                       <button type="button" class="prompt-mode-trigger" id="promptModeTrigger" title="Question focus" aria-haspopup="menu" aria-expanded="false" aria-controls="promptModeMenu">
                         <span class="prompt-mode-trigger-ico" id="promptModeTriggerIcon" aria-hidden="true"></span>
                         <span class="prompt-mode-trigger-label" id="promptModeTriggerLabel">General</span>
-                        <svg class="prompt-mode-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg>
+                        <svg class="prompt-mode-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg>
                       </button>
                       <div class="prompt-mode-menu" id="promptModeMenu" role="menu" hidden></div>
                     </div>
@@ -1450,7 +1455,7 @@ data:
 
           function pmSvg(pathD) {
             return (
-              '<svg class="prompt-mode-ico" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" d="' +
+              '<svg class="prompt-mode-ico" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" d="' +
               pathD +
               '"/></svg>'
             );
