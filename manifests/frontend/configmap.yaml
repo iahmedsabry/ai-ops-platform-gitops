@@ -1416,6 +1416,114 @@ data:
             });
           }
 
+          function escapeTitleRe(s) {
+            return String(s).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+          }
+
+          var KUBE_APP_KEYWORD_SPECS = [
+            ["horizontal pod autoscaler", "HPA"],
+            ["pod disruption budget", "PDB"],
+            ["persistent volume claim", "PVC"],
+            ["persistent volume", "PV"],
+            ["statefulset", "StatefulSet"],
+            ["stateful set", "StatefulSet"],
+            ["daemonset", "DaemonSet"],
+            ["daemon set", "DaemonSet"],
+            ["replicaset", "ReplicaSet"],
+            ["replica set", "ReplicaSet"],
+            ["networkpolicy", "NetworkPolicy"],
+            ["network policy", "NetworkPolicy"],
+            ["serviceaccount", "ServiceAccount"],
+            ["service account", "ServiceAccount"],
+            ["configmap", "ConfigMap"],
+            ["config map", "ConfigMap"],
+            ["cronjob", "CronJob"],
+            ["cron job", "CronJob"],
+            ["deployment", "Deployment"],
+            ["deployments", "Deployments"],
+            ["namespace", "Namespace"],
+            ["namespaces", "Namespaces"],
+            ["ingress", "Ingress"],
+            ["gateway", "Gateway"],
+            ["workloads", "Workloads"],
+            ["workload", "Workload"],
+            ["kubernetes", "Kubernetes"],
+            ["gitops", "GitOps"],
+            ["argocd", "Argo CD"],
+            ["argo cd", "Argo CD"],
+            ["kubectl", "kubectl"],
+            ["helm", "Helm"],
+            ["flux", "Flux"],
+            ["prometheus", "Prometheus"],
+            ["grafana", "Grafana"],
+            ["cluster", "Cluster"],
+            ["containers", "Containers"],
+            ["container", "Container"],
+            ["operator", "Operator"],
+            ["applications", "Applications"],
+            ["application", "Application"],
+            ["rollout", "Rollout"],
+            ["replicas", "Replicas"],
+            ["replica", "Replica"],
+            ["resources", "Resources"],
+            ["secrets", "Secrets"],
+            ["secret", "Secret"],
+            ["services", "Services"],
+            ["service", "Service"],
+            ["volumes", "Volumes"],
+            ["volume", "Volume"],
+            ["nodes", "Nodes"],
+            ["node", "Node"],
+            ["crds", "CRDs"],
+            ["crd", "CRD"],
+            ["rbac", "RBAC"],
+            ["probes", "Probes"],
+            ["probe", "Probe"],
+            ["metrics", "Metrics"],
+            ["logging", "Logging"],
+            ["events", "Events"],
+            ["pods", "Pods"],
+            ["pod", "Pod"],
+            ["registry", "Registry"],
+            ["image", "Image"],
+            ["images", "Images"],
+            ["apps", "Apps"],
+            ["app", "App"],
+            ["k8s", "K8s"],
+          ];
+
+          function findKubeAppKeyword(hayLower) {
+            var best = null;
+            var si;
+            for (si = 0; si < KUBE_APP_KEYWORD_SPECS.length; si++) {
+              var phrase = KUBE_APP_KEYWORD_SPECS[si][0];
+              var label = KUBE_APP_KEYWORD_SPECS[si][1];
+              var reStr =
+                phrase.indexOf(" ") >= 0
+                  ? "\\b" +
+                    phrase.split(/\s+/).map(escapeTitleRe).join("\\s+") +
+                    "\\b"
+                  : "\\b" + escapeTitleRe(phrase) + "\\b";
+              var reKw = new RegExp(reStr, "i");
+              var m = reKw.exec(hayLower);
+              if (!m) continue;
+              var idx = m.index;
+              if (
+                !best ||
+                idx < best.idx ||
+                (idx === best.idx && phrase.length > best.phraseLen)
+              ) {
+                best = {
+                  idx: idx,
+                  phraseLen: phrase.length,
+                  label: label,
+                  phrase: phrase,
+                };
+              }
+            }
+            return best;
+          }
+
           function titleFromFirstMessage(text) {
             var softTruncTitle = function (s, max) {
               if (!s || !s.trim()) return "Chat";
@@ -1509,6 +1617,26 @@ data:
             var stem = lo || topic.toLowerCase();
             stem = stem.replace(/^(the|a|an)\s+/, "").trim();
             if (!stem) stem = topic.toLowerCase();
+
+            var kwHit = findKubeAppKeyword(topic.toLowerCase());
+            if (kwHit) {
+              var reRmStr =
+                kwHit.phrase.indexOf(" ") >= 0
+                  ? "\\b" +
+                    kwHit.phrase.split(/\s+/).map(escapeTitleRe).join("\\s+") +
+                    "\\b"
+                  : "\\b" + escapeTitleRe(kwHit.phrase) + "\\b";
+              var tailLo = lo
+                .replace(new RegExp(reRmStr, "gi"), " ")
+                .replace(/\s+/g, " ")
+                .trim();
+              tailLo = tailLo.replace(/^(the|a|an)\s+/, "").trim();
+              var tailDisp = tailLo ? softTruncTitle(tailLo, 44) : "";
+              var kwCandidate = tailDisp
+                ? kwHit.label + " · " + tailDisp
+                : kwHit.label;
+              return softTruncTitle(kwCandidate, 54);
+            }
 
             var candidate = capWord(softTruncTitle(stem, 50));
             var fullNorm = topic.toLowerCase();
