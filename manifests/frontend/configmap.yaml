@@ -19,7 +19,7 @@ data:
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
         <style>
           :root {
@@ -55,7 +55,8 @@ data:
             --danger-bg: rgba(220, 8, 20, 0.1);
             --danger-text: #9a0610;
             --danger-br: rgba(220, 8, 20, 0.35);
-            --font-ui: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-ui: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, -apple-system,
+              BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             font-family: var(--font-ui);
             font-feature-settings: "cv02", "cv11", "ss01";
           }
@@ -623,63 +624,172 @@ data:
             border-radius: 999px;
           }
 
-          .prompt-mode-wrap {
+          .prompt-mode-bar {
             align-self: flex-start;
-            flex: 0 0 auto;
-            width: auto;
-            max-width: min(14.5rem, 52vw);
+            width: 100%;
             min-width: 0;
-            padding: 0 0 8px;
-            margin: 0;
-            padding-left: 14px;
+            flex: 0 0 auto;
+            padding-top: 5px;
+            margin-top: 3px;
+            border-top: 1px solid rgba(50, 11, 50, 0.06);
           }
 
-          .prompt-mode-select {
-            box-sizing: border-box;
-            display: block;
-            width: 100%;
+          .prompt-mode-anchor {
+            position: relative;
+            z-index: 55;
+            display: inline-flex;
             max-width: 100%;
+          }
+
+          .prompt-mode-trigger {
+            display: inline-flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 6px;
+            min-height: 30px;
+            padding: 4px 10px 4px 8px;
             margin: 0;
-            min-height: 36px;
-            padding: 8px 34px 8px 12px;
-            border-radius: 11px;
-            border: 1px solid rgba(155, 35, 129, 0.15);
-            background: rgba(255, 255, 255, 0.78);
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%237a5c7a' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 11px center;
-            background-size: 11px 11px;
+            border-radius: 999px;
+            border: 1px solid rgba(155, 35, 129, 0.12);
+            background: rgba(250, 248, 251, 0.96);
+            color: var(--text-dim);
             font-family: var(--font-ui);
-            font-size: 0.8125rem;
+            font-size: 0.75rem;
             font-weight: 500;
             letter-spacing: 0.01em;
-            line-height: 1.25;
-            color: var(--text);
+            line-height: 1.2;
             cursor: pointer;
-            appearance: none;
-            -webkit-appearance: none;
-            box-shadow:
-              0 0 0 1px rgba(255, 255, 255, 0.55) inset,
-              0 1px 3px rgba(50, 11, 50, 0.05);
+            max-width: min(14.5rem, 72vw);
             transition:
-              border-color 0.18s ease,
-              box-shadow 0.2s ease,
-              background-color 0.18s ease;
+              background 0.16s ease,
+              border-color 0.16s ease,
+              color 0.14s ease,
+              box-shadow 0.18s ease;
+            box-shadow: 0 1px 2px rgba(50, 11, 50, 0.03);
           }
 
-          .prompt-mode-select:hover {
-            border-color: rgba(155, 35, 129, 0.26);
-            background-color: rgba(255, 255, 255, 0.92);
+          .prompt-mode-trigger:hover {
+            border-color: rgba(155, 35, 129, 0.2);
+            background: #fff;
+            color: var(--c-plum);
           }
 
-          .prompt-mode-select:focus {
+          .prompt-mode-trigger:focus {
             outline: none;
-            border-color: rgba(155, 35, 129, 0.34);
-            background-color: #fff;
-            box-shadow:
-              0 0 0 2px rgba(155, 35, 129, 0.12),
-              0 0 0 1px rgba(255, 255, 255, 0.7) inset,
-              0 1px 4px rgba(50, 11, 50, 0.06);
+            border-color: rgba(155, 35, 129, 0.28);
+            box-shadow: 0 0 0 2px rgba(155, 35, 129, 0.11);
+          }
+
+          .prompt-mode-trigger .prompt-mode-trigger-ico {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(155, 35, 129, 0.88);
+          }
+
+          .prompt-mode-trigger .prompt-mode-trigger-ico .prompt-mode-ico {
+            display: block;
+          }
+
+          .prompt-mode-trigger .prompt-mode-trigger-label {
+            flex: 1 1 auto;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: left;
+          }
+
+          .prompt-mode-chevron {
+            flex-shrink: 0;
+            width: 12px;
+            height: 12px;
+            stroke: rgba(50, 11, 50, 0.42);
+            fill: none;
+            display: block;
+            pointer-events: none;
+          }
+
+          .prompt-mode-menu {
+            position: absolute;
+            left: 0;
+            bottom: calc(100% + 6px);
+            z-index: 120;
+            min-width: min(232px, calc(100vw - 32px));
+            max-width: min(268px, calc(100vw - 24px));
+            max-height: min(320px, 50vh);
+            overflow-y: auto;
+            padding: 5px;
+            border-radius: 14px;
+            background: #ffffff;
+            border: 1px solid var(--border-hair);
+            box-shadow: 0 8px 28px rgba(50, 11, 50, 0.1);
+            scrollbar-width: thin;
+          }
+
+          .prompt-mode-menu::-webkit-scrollbar {
+            width: 5px;
+          }
+
+          .prompt-mode-menu::-webkit-scrollbar-thumb {
+            background: rgba(155, 35, 129, 0.22);
+            border-radius: 999px;
+          }
+
+          .prompt-mode-item {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            margin: 0;
+            padding: 6px 9px;
+            border: none;
+            border-radius: 10px;
+            background: transparent;
+            color: var(--text-dim);
+            font-family: var(--font-ui);
+            font-size: 0.78rem;
+            font-weight: 500;
+            line-height: 1.3;
+            letter-spacing: 0.01em;
+            cursor: pointer;
+            text-align: left;
+            transition: background 0.14s ease, color 0.12s ease;
+          }
+
+          .prompt-mode-item .prompt-mode-ico {
+            flex-shrink: 0;
+            color: rgba(155, 35, 129, 0.82);
+          }
+
+          .prompt-mode-item .prompt-mode-item-text {
+            flex: 1 1 auto;
+            min-width: 0;
+          }
+
+          .prompt-mode-item .prompt-mode-check {
+            flex-shrink: 0;
+            width: 14px;
+            height: 14px;
+            stroke: rgba(155, 35, 129, 0.65);
+            fill: none;
+            opacity: 0;
+          }
+
+          .prompt-mode-item.is-active .prompt-mode-check {
+            opacity: 1;
+          }
+
+          .prompt-mode-item:hover {
+            background: rgba(210, 120, 137, 0.12);
+            color: var(--c-plum);
+          }
+
+          .prompt-mode-item.is-active {
+            background: rgba(234, 211, 218, 0.42);
+            color: var(--c-plum);
           }
 
           .compose-att-chip {
@@ -1244,9 +1354,6 @@ data:
 
           <div class="composer">
             <div class="composer-inner">
-              <div class="prompt-mode-wrap" id="promptModeWrap">
-                <select id="promptModeSelect" class="prompt-mode-select" aria-label="Question focus"></select>
-              </div>
               <div class="input-aurora">
                 <div class="input-shell">
                   <div class="composer-attachments" id="composerAttachments" hidden></div>
@@ -1279,6 +1386,16 @@ data:
                       </button>
                     </div>
                   </div>
+                  <div class="prompt-mode-bar">
+                    <div class="prompt-mode-anchor" id="promptModeAnchor">
+                      <button type="button" class="prompt-mode-trigger" id="promptModeTrigger" title="Question focus" aria-haspopup="menu" aria-expanded="false" aria-controls="promptModeMenu">
+                        <span class="prompt-mode-trigger-ico" id="promptModeTriggerIcon" aria-hidden="true"></span>
+                        <span class="prompt-mode-trigger-label" id="promptModeTriggerLabel">General</span>
+                        <svg class="prompt-mode-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg>
+                      </button>
+                      <div class="prompt-mode-menu" id="promptModeMenu" role="menu" hidden></div>
+                    </div>
+                  </div>
                 </div>
               </div>
               <p class="hint">Enter to send · Shift+Enter for new line</p>
@@ -1300,7 +1417,11 @@ data:
           var attachMenu = document.getElementById("attachMenu");
           var attachMenuUpload = document.getElementById("attachMenuUpload");
           var composerAttachmentsEl = document.getElementById("composerAttachments");
-          var promptModeSelect = document.getElementById("promptModeSelect");
+          var promptModeTrigger = document.getElementById("promptModeTrigger");
+          var promptModeMenu = document.getElementById("promptModeMenu");
+          var promptModeTriggerLabel = document.getElementById("promptModeTriggerLabel");
+          var promptModeTriggerIcon = document.getElementById("promptModeTriggerIcon");
+          var promptModeAnchor = document.getElementById("promptModeAnchor");
           var emptyState = document.getElementById("emptyState");
           var sidebarList = document.getElementById("sidebarList");
           var btnNewChat = document.getElementById("btnNewChat");
@@ -1327,61 +1448,184 @@ data:
           var PROMPT_MODE_STORAGE_KEY = "kai-prompt-mode-v1";
           var selectedPromptModeId = "general";
 
+          function pmSvg(pathD) {
+            return (
+              '<svg class="prompt-mode-ico" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" d="' +
+              pathD +
+              '"/></svg>'
+            );
+          }
+
           var FOCUS_CHIP_DEFS = [
             {
               id: "general",
               label: "General",
               title: "Default assistant behavior",
+              iconPath:
+                "M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z",
             },
             {
               id: "cost",
               label: "Cost",
               title: "FinOps, utilization, quotas, and waste",
+              iconPath: "M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6",
             },
             {
               id: "security",
               label: "Security",
               title: "Exposure, identity, RBAC hints from live data",
+              iconPath: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z",
             },
             {
               id: "reliability",
               label: "Reliability",
               title: "Incidents, rollouts, crashes, probes",
+              iconPath: "M22 12h-4l-3 9L9 3l-3 9H2",
             },
             {
               id: "cluster_overview",
               label: "Overview",
               title: "Broad cluster health snapshot",
+              iconPath:
+                "M4 5h5v5H4V5zm11 0h5v5h-5V5zM4 14h5v5H4v-5zm11 0h5v5h-5v-5z",
             },
             {
               id: "gitops",
               label: "GitOps",
               title: "Argo CD and sync health",
+              iconPath:
+                "M12 2a2 2 0 100 4 2 2 0 000-4zm0 12a2 2 0 100 4 2 2 0 000-4zM12 6v8",
             },
             {
               id: "networking",
               label: "Networking",
               title: "Services, ingresses, endpoints",
+              iconPath:
+                "M4 12v7a2 2 0 002 2h12a2 2 0 002-2v-7M16 6l-4-4-4 4M12 2v11",
             },
             {
               id: "storage",
               label: "Storage",
               title: "PVCs, PVs, mount issues",
+              iconPath: "M6 4h12v4H6V4zm0 6h12v4H6v-4zm0 6h8v4H6v-4z",
             },
             {
               id: "enhancement",
               label: "Enhance",
               title: "Improvements grounded in data",
+              iconPath:
+                "M12 3v3M12 18v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M19.8 4.2l-2.1 2.1M6.3 17.7l-2.1 2.1M3 12h3M18 12h3",
             },
             {
               id: "change_ready",
               label: "Changes",
               title: "What might change — read-only guidance",
+              iconPath:
+                "M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5l3 3L12 15l-4 1 1-4 9.5-9.5z",
             },
           ];
 
-          function initPromptModeSelect() {
-            if (!promptModeSelect) return;
+          function focusDefById(id) {
+            var fd;
+            for (fd = 0; fd < FOCUS_CHIP_DEFS.length; fd++) {
+              if (FOCUS_CHIP_DEFS[fd].id === id) return FOCUS_CHIP_DEFS[fd];
+            }
+            return FOCUS_CHIP_DEFS[0];
+          }
+
+          function updatePromptModeTriggerUi() {
+            if (!promptModeTriggerLabel || !promptModeTriggerIcon) return;
+            var def = focusDefById(selectedPromptModeId);
+            promptModeTriggerLabel.textContent = def.label;
+            promptModeTriggerIcon.innerHTML = pmSvg(def.iconPath);
+            if (promptModeTrigger) {
+              promptModeTrigger.title = def.title || def.label;
+            }
+          }
+
+          function syncPromptModeMenuActive() {
+            if (!promptModeMenu) return;
+            var items = promptModeMenu.querySelectorAll(".prompt-mode-item");
+            var i;
+            for (i = 0; i < items.length; i++) {
+              var btn = items[i];
+              var mid = btn.getAttribute("data-prompt-mode");
+              var on = mid === selectedPromptModeId;
+              if (on) btn.classList.add("is-active");
+              else btn.classList.remove("is-active");
+            }
+          }
+
+          function buildPromptModeMenuItems() {
+            if (!promptModeMenu) return;
+            while (promptModeMenu.firstChild) {
+              promptModeMenu.removeChild(promptModeMenu.firstChild);
+            }
+            var mi;
+            for (mi = 0; mi < FOCUS_CHIP_DEFS.length; mi++) {
+              (function (def) {
+                var isAct = def.id === selectedPromptModeId;
+                var b = document.createElement("button");
+                b.type = "button";
+                b.className =
+                  "prompt-mode-item" + (isAct ? " is-active" : "");
+                b.setAttribute("role", "menuitem");
+                b.setAttribute("data-prompt-mode", def.id);
+                b.title = def.title || def.label;
+                b.innerHTML =
+                  pmSvg(def.iconPath) +
+                  '<span class="prompt-mode-item-text">' +
+                  escapeHtml(def.label) +
+                  "</span>" +
+                  '<svg class="prompt-mode-check" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M20 6L9 17l-5-5"/></svg>';
+                b.addEventListener("click", function (e) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  selectedPromptModeId = def.id;
+                  try {
+                    sessionStorage.setItem(
+                      PROMPT_MODE_STORAGE_KEY,
+                      selectedPromptModeId
+                    );
+                  } catch (e2) {}
+                  updatePromptModeTriggerUi();
+                  syncPromptModeMenuActive();
+                  closePromptModeMenu();
+                  if (promptModeTrigger) promptModeTrigger.focus();
+                });
+                promptModeMenu.appendChild(b);
+              })(FOCUS_CHIP_DEFS[mi]);
+            }
+          }
+
+          function closePromptModeMenu() {
+            if (!promptModeMenu || !promptModeTrigger) return;
+            promptModeMenu.setAttribute("hidden", "hidden");
+            promptModeTrigger.setAttribute("aria-expanded", "false");
+          }
+
+          function openPromptModeMenu() {
+            if (!promptModeMenu || !promptModeTrigger) return;
+            syncPromptModeMenuActive();
+            promptModeMenu.removeAttribute("hidden");
+            promptModeTrigger.setAttribute("aria-expanded", "true");
+          }
+
+          function togglePromptModeMenu() {
+            if (!promptModeMenu) return;
+            if (promptModeMenu.hasAttribute("hidden")) openPromptModeMenu();
+            else closePromptModeMenu();
+          }
+
+          function initPromptModeMenu() {
+            if (
+              !promptModeTrigger ||
+              !promptModeMenu ||
+              !promptModeTriggerLabel ||
+              !promptModeTriggerIcon
+            ) {
+              return;
+            }
             var saved = "";
             try {
               saved = sessionStorage.getItem(PROMPT_MODE_STORAGE_KEY) || "";
@@ -1396,27 +1640,30 @@ data:
                 break;
               }
             }
-            while (promptModeSelect.firstChild) {
-              promptModeSelect.removeChild(promptModeSelect.firstChild);
-            }
-            var ci;
-            for (ci = 0; ci < FOCUS_CHIP_DEFS.length; ci++) {
-              var def = FOCUS_CHIP_DEFS[ci];
-              var opt = document.createElement("option");
-              opt.value = def.id;
-              opt.textContent = def.label;
-              opt.title = def.title || def.label;
-              promptModeSelect.appendChild(opt);
-            }
-            promptModeSelect.value = selectedPromptModeId;
-            promptModeSelect.addEventListener("change", function () {
-              selectedPromptModeId = promptModeSelect.value || "general";
-              try {
-                sessionStorage.setItem(
-                  PROMPT_MODE_STORAGE_KEY,
-                  selectedPromptModeId
-                );
-              } catch (e2) {}
+            buildPromptModeMenuItems();
+            updatePromptModeTriggerUi();
+
+            promptModeTrigger.addEventListener("click", function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              togglePromptModeMenu();
+            });
+
+            document.addEventListener("click", function (e) {
+              if (!promptModeMenu || promptModeMenu.hasAttribute("hidden"))
+                return;
+              if (promptModeAnchor && promptModeAnchor.contains(e.target))
+                return;
+              closePromptModeMenu();
+            });
+
+            document.addEventListener("keydown", function (e) {
+              if (e.key !== "Escape") return;
+              if (!promptModeMenu || promptModeMenu.hasAttribute("hidden"))
+                return;
+              e.preventDefault();
+              closePromptModeMenu();
+              if (promptModeTrigger) promptModeTrigger.focus();
             });
           }
 
@@ -2601,7 +2848,7 @@ data:
             sidebarScrim.classList.remove("show");
           });
 
-          initPromptModeSelect();
+          initPromptModeMenu();
           loadStore();
           purgeStaleEmptySessions();
           if (!findSession(store.activeId)) {
