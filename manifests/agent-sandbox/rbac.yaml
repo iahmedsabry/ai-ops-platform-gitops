@@ -45,6 +45,17 @@ rules:
       - list
 
   # =====================================================
+  # ServiceAccounts + Secrets (read-only audit only)
+  # =====================================================
+  - apiGroups: [""]
+    resources:
+      - serviceaccounts
+      - secrets
+    verbs:
+      - get
+      - list
+
+  # =====================================================
   # Namespaces
   # =====================================================
   - apiGroups: [""]
@@ -93,6 +104,28 @@ rules:
   - apiGroups: ["networking.k8s.io"]
     resources:
       - ingresses
+      - networkpolicies
+    verbs:
+      - get
+      - list
+
+  # =====================================================
+  # RBAC objects for security audit tools
+  # =====================================================
+  - apiGroups: ["rbac.authorization.k8s.io"]
+    resources:
+      - clusterroles
+      - clusterrolebindings
+    verbs:
+      - get
+      - list
+
+  # =====================================================
+  # PodDisruptionBudgets for availability/compliance checks
+  # =====================================================
+  - apiGroups: ["policy"]
+    resources:
+      - poddisruptionbudgets
     verbs:
       - get
       - list
