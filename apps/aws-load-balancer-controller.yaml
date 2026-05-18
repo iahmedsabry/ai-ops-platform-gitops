@@ -15,7 +15,7 @@ spec:
       values: |
         clusterName: ai-ops-platform-eks
         region: us-east-1
-        vpcId: vpc-0abeb13eae643e27e
+        vpcId: vpc-0af8f6ceee46af6de
         serviceAccount:
           create: true
           name: aws-load-balancer-controller
