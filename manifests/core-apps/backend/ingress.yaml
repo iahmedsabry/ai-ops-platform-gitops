@@ -26,6 +26,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: backend
+                name: backend-outage-drill
                 port:
                   number: 80
