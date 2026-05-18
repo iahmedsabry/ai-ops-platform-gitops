@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
-  namespace: default
   annotations:
     # Optional: uncomment if Argo CD Image Updater is installed
     # argocd-image-updater.argoproj.io/image-list: frontend=iahmedsabry/kai-frontend
@@ -20,7 +19,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: iahmedsabry/kai-frontend:latest
+          image: frontend-image
           imagePullPolicy: Always
           ports:
             - containerPort: 80

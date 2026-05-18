@@ -7,6 +7,7 @@ spec:
   project: default
 
   source:
+    # PER-ENVIRONMENT: Git URL + branch your Argo CD instance should track (fork or per-env repo).
     repoURL: https://github.com/iahmedsabry/ai-ops-platform-gitops.git
     targetRevision: HEAD
     path: apps

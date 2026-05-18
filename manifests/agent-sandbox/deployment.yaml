@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: agent-sandbox
-  namespace: default
 spec:
   replicas: 1
   selector:
@@ -16,7 +15,10 @@ spec:
       serviceAccountName: agent-sandbox
       containers:
         - name: agent-sandbox
-          image: iahmedsabry/agent-sandbox:latest
+          image: agent-sandbox-image
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: agent-sandbox-runtime

@@ -11,6 +11,7 @@ spec:
     chart: aws-load-balancer-controller
     targetRevision: 1.6.2
     helm:
+      # PER-ENVIRONMENT: clusterName, region, vpcId, and IRSA role ARN must match the target AWS account / EKS cluster.
       values: |
         clusterName: ai-ops-platform-eks
         region: us-east-1

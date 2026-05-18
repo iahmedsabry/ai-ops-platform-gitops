@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: agent-controller
-  namespace: default
 spec:
   replicas: 1
   selector:
@@ -15,12 +14,17 @@ spec:
     spec:
       containers:
         - name: agent-controller
-          image: iahmedsabry/agent-controller:latest
+          image: agent-controller-image
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
 
+          envFrom:
+            - configMapRef:
+                name: agent-controller-runtime
+
           env:
+            # PER-ENVIRONMENT: Secret must exist in this namespace; for new clusters re-seal GEMINI_API_KEY (see ENVIRONMENT_VALUES.md).
             - name: GEMINI_API_KEY
               valueFrom:
                 secretKeyRef:

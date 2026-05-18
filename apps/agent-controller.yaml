@@ -6,13 +6,16 @@ metadata:
 spec:
   project: default
   source:
+    # PER-ENVIRONMENT: Git URL for your GitOps repo (fork / org / per-environment branch or repo).
     repoURL: https://github.com/iahmedsabry/ai-ops-platform-gitops.git
     targetRevision: HEAD
     path: manifests/agent-controller
   destination:
     server: https://kubernetes.default.svc
-    namespace: default
+    namespace: ai-ops
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

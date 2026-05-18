@@ -1,8 +1,8 @@
+# PER-ENVIRONMENT: add eks.amazonaws.com/role-arn on this ServiceAccount for AWS API access (see irsa-and-aws-env.example.yaml).
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: agent-sandbox
-  namespace: default
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -213,9 +213,10 @@ metadata:
   name: agent-sandbox-binding
 
 subjects:
+  # PER-ENVIRONMENT: namespace must match agent-sandbox Kustomization + Argo CD destination.
   - kind: ServiceAccount
     name: agent-sandbox
-    namespace: default
+    namespace: ai-ops
 
 roleRef:
   kind: ClusterRole

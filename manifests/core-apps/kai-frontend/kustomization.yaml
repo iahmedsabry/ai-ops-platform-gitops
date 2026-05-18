@@ -1,7 +1,16 @@
+# PER-ENVIRONMENT: namespace and image must match how you deploy the UI in this cluster.
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+
+namespace: ai-ops
 
 resources:
   - deployment.yaml
   - ingress.yaml
   - service.yaml
+
+# PER-ENVIRONMENT: newName/newTag = your frontend image registry and version.
+images:
+  - name: frontend-image
+    newName: iahmedsabry/kai-frontend
+    newTag: latest

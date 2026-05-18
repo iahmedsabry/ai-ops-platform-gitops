@@ -1,4 +1,4 @@
-# PER-ENVIRONMENT: namespace must match Argo CD Application destination for agent-sandbox (and RBAC binding in rbac.yaml).
+# PER-ENVIRONMENT: namespace must match Argo CD Application destination for agent-controller (and DNS used in SANDBOX_EXECUTE_URL).
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
@@ -7,15 +7,14 @@ namespace: ai-ops
 resources:
   - deployment.yaml
   - service.yaml
-  - rbac.yaml
 
 configMapGenerator:
-  - name: agent-sandbox-runtime
+  - name: agent-controller-runtime
     envs:
       - app-config.env
 
 # PER-ENVIRONMENT: newName/newTag = your container registry and version (ECR, Docker Hub, etc.).
 images:
-  - name: agent-sandbox-image
-    newName: iahmedsabry/agent-sandbox
+  - name: agent-controller-image
+    newName: iahmedsabry/agent-controller
     newTag: latest
