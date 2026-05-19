@@ -6,7 +6,7 @@ metadata:
   namespace: ai-ops
   annotations:
     # PER-ENVIRONMENT: real IAM role created for this account (trust = this cluster's OIDC provider).
-    eks.amazonaws.com/role-arn: arn:aws:iam::917246193838:role/ai-ops-platform-agent-sandbox-billing-role
+    eks.amazonaws.com/role-arn: arn:aws:iam::243637692998:role/ai-ops-platform-agent-sandbox-billing-role
 ---
 apiVersion: apps/v1
 kind: Deployment
