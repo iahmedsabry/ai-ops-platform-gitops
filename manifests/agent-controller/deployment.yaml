@@ -24,9 +24,14 @@ spec:
                 name: agent-controller-runtime
 
           env:
-            # PER-ENVIRONMENT: Secret must exist in this namespace; for new clusters re-seal LLM_API_KEY (see ENVIRONMENT_VALUES.md).
-            - name: LLM_API_KEY
+            # PER-ENVIRONMENT: Secret must exist in this namespace and contain COPILOT_PAT.
+            - name: COPILOT_PAT
               valueFrom:
                 secretKeyRef:
-                  name: llm-secret
-                  key: LLM_API_KEY
+                  name: copilot-auth-secret
+                  key: COPILOT_PAT
+            - name: GH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: copilot-auth-secret
+                  key: COPILOT_PAT
