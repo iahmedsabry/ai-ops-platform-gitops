@@ -11,6 +11,11 @@ metadata:
     alb.ingress.kubernetes.io/group.name: shared-alb
     alb.ingress.kubernetes.io/group.order: "2"
 
+    # `/chat` can exceed the ALB default idle timeout (60s) — Copilot + many tools runs minutes.
+    # Valid range 1–4000. IngressGroup: use the same idle_timeout across all Ingresses in the group
+    # or set it on only one; see aws-load-balancer-controller docs.
+    alb.ingress.kubernetes.io/load-balancer-attributes: idle_timeout.timeout_seconds=600
+
 spec:
   ingressClassName: alb
 
