@@ -19,6 +19,22 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
+
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            timeoutSeconds: 5
+
           envFrom:
             - configMapRef:
                 name: agent-sandbox-runtime
