@@ -20,18 +20,19 @@ spec:
           ports:
             - containerPort: 8000
 
+          # Liveness stays cheap; readiness proves in-cluster JWT + RBAC hit the apiserver.
           readinessProbe:
             httpGet:
-              path: /
+              path: /health/ready
               port: 8000
             initialDelaySeconds: 5
             periodSeconds: 10
-            timeoutSeconds: 5
+            timeoutSeconds: 10
           livenessProbe:
             httpGet:
-              path: /
+              path: /health/live
               port: 8000
-            initialDelaySeconds: 15
+            initialDelaySeconds: 10
             periodSeconds: 20
             timeoutSeconds: 5
 
