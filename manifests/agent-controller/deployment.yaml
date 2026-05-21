@@ -24,7 +24,14 @@ spec:
                 name: agent-controller-runtime
 
           env:
-            # PER-ENVIRONMENT: Secret must exist in this namespace and contain COPILOT_PAT.
+            # PER-ENVIRONMENT: Secret must exist in this namespace.
+            # Docs-preferred var for non-interactive Copilot CLI auth.
+            - name: COPILOT_GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: copilot-auth-secret
+                  key: COPILOT_PAT
+            # Backward-compatible alias.
             - name: COPILOT_PAT
               valueFrom:
                 secretKeyRef:
