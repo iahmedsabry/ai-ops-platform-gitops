@@ -12,13 +12,29 @@ spec:
       labels:
         app: agent-sandbox
     spec:
+      # Namespace-level automount OFF would omit the apiserver JWT and produce 401
+      # everywhere (prometheus_plain_http still succeeds). Explicit true restores it.
+      automountServiceAccountToken: true
       serviceAccountName: agent-sandbox
+      # Extra apiserver-bound projected JWT (preferred path in agent_sandbox.clients).
+      volumes:
+        - name: sandbox-kube-apiserver-sat
+          projected:
+            defaultMode: 420
+            sources:
+              - serviceAccountToken:
+                  path: token
+                  expirationSeconds: 3607
       containers:
         - name: agent-sandbox
           image: agent-sandbox-image
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
+          volumeMounts:
+            - name: sandbox-kube-apiserver-sat
+              mountPath: /var/run/secrets/sandbox/kube-apiserver
+              readOnly: true
 
           # Liveness stays cheap; readiness proves in-cluster JWT + RBAC hit the apiserver.
           readinessProbe:
