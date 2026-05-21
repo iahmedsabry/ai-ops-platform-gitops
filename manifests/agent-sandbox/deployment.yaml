@@ -16,7 +16,7 @@ spec:
       # everywhere (prometheus_plain_http still succeeds). Explicit true restores it.
       automountServiceAccountToken: true
       serviceAccountName: agent-sandbox
-      # Extra apiserver-bound projected JWT (preferred path in agent_sandbox.clients).
+      # Extra projected JWT (sandbox tries automount SAT first, then this path — see SANDBOX_K8S_SAT_*).
       volumes:
         - name: sandbox-kube-apiserver-sat
           projected:
@@ -25,6 +25,8 @@ spec:
               - serviceAccountToken:
                   path: token
                   expirationSeconds: 3607
+                  # Omit to let the kubelet use apiserver default audiences; tune if audits show audience mismatch:
+                  # audience: https://kubernetes.default.svc
       containers:
         - name: agent-sandbox
           image: agent-sandbox-image
