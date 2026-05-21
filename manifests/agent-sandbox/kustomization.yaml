@@ -9,6 +9,20 @@ resources:
   - service.yaml
   - rbac.yaml
 
+# Keep ClusterRoleBinding subject.namespace aligned with the ServiceAccount namespace
+# (avoids 403 when Argo deploys agent-sandbox to a namespace other than ai-ops).
+replacements:
+  - source:
+      kind: ServiceAccount
+      name: agent-sandbox
+      fieldPath: metadata.namespace
+    targets:
+      - select:
+          kind: ClusterRoleBinding
+          name: agent-sandbox-binding
+        fieldPaths:
+          - subjects.0.namespace
+
 configMapGenerator:
   - name: agent-sandbox-runtime
     envs:
