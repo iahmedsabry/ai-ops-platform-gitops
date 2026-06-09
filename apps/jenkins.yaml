@@ -1,0 +1,64 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: jenkins
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+
+  source:
+    repoURL: https://charts.jenkins.io
+    chart: jenkins
+    targetRevision: 5.9.22
+    helm:
+      values: |
+        controller:
+          admin:
+            existingSecret: jenkins-admin-secret
+            userKey: jenkins-admin-user
+            passwordKey: jenkins-admin-password
+            createSecret: true
+          image:
+            pullPolicy: IfNotPresent
+          jenkinsUriPrefix: /jenkins
+          jenkinsUrlProtocol: http
+          serviceType: ClusterIP
+          initializeOnce: true
+          installLatestPlugins: false
+          testEnabled: false
+          ingress:
+            enabled: true
+            ingressClassName: alb
+            path: /jenkins
+            pathType: Prefix
+            annotations:
+              kubernetes.io/ingress.class: alb
+              alb.ingress.kubernetes.io/scheme: internet-facing
+              alb.ingress.kubernetes.io/target-type: ip
+              alb.ingress.kubernetes.io/group.name: shared-alb
+              alb.ingress.kubernetes.io/group.order: "4"
+              alb.ingress.kubernetes.io/healthcheck-path: /jenkins/login
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: "1"
+              memory: 2Gi
+        persistence:
+          enabled: true
+          size: 20Gi
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: jenkins
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+
+    syncOptions:
+      - CreateNamespace=true

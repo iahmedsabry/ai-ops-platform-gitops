@@ -46,14 +46,17 @@ spec:
                 secretKeyRef:
                   name: copilot-auth-secret
                   key: COPILOT_PAT
+                  optional: true
             # Backward-compatible alias.
             - name: COPILOT_PAT
               valueFrom:
                 secretKeyRef:
                   name: copilot-auth-secret
                   key: COPILOT_PAT
+                  optional: true
             - name: GH_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: copilot-auth-secret
                   key: COPILOT_PAT
+                  optional: true
