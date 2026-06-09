@@ -22,11 +22,21 @@ spec:
             createSecret: true
           image:
             pullPolicy: IfNotPresent
+          # PER-ENVIRONMENT: Set this to your ALB/Ingress public URL.
+          jenkinsUrl: http://k8s-sharedalb-e13b87c08d-538106531.us-east-1.elb.amazonaws.com/jenkins
           jenkinsUriPrefix: /jenkins
           jenkinsUrlProtocol: http
           serviceType: ClusterIP
-          initializeOnce: true
-          installLatestPlugins: false
+          # Keep plugins current and resolve dependency/security updates on restart.
+          initializeOnce: false
+          overwritePlugins: true
+          installPlugins:
+            - kubernetes
+            - workflow-aggregator
+            - git
+            - configuration-as-code
+          installLatestPlugins: true
+          installLatestSpecifiedPlugins: true
           testEnabled: false
           ingress:
             enabled: true
