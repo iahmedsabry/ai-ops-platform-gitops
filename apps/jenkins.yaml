@@ -49,6 +49,7 @@ spec:
               memory: 2Gi
         persistence:
           enabled: true
+          storageClass: gp2
           size: 20Gi
 
   destination:
